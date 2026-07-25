@@ -23,7 +23,7 @@
 // Description:
 // La taille est basé sur une ancienne taille de fenêtre et une taille précédente
 //==============================
-static int calculateSize(int baseSize, int baseWindowWidth, 
+int calculateSize(int baseSize, int baseWindowWidth, 
 	int baseWindowHeight, int currentWindowWidth, int currentWindowHeight);
 
 //==============================
@@ -35,7 +35,7 @@ static int calculateSize(int baseSize, int baseWindowWidth,
 // Description:
 // La taille est basé sur une ancienne taille X de fenêtre et une taille X précédente
 //==============================
-static float calculateSizeX(float baseSize, int baseWindowWidth, int currentWindowWidth);
+float calculateSizeX(float baseSize, int baseWindowWidth, int currentWindowWidth);
 
 //==============================
 // Fonction pour calculer une taille Y en fonction de la taille de la fenêtre
@@ -46,18 +46,28 @@ static float calculateSizeX(float baseSize, int baseWindowWidth, int currentWind
 // Description:
 // La taille est basé sur une ancienne taille Y de fenêtre et une taille Y précédente
 //==============================
-static float calculateSizeY(float baseSize, int baseWindowHeight, int currentWindowHeight);
+float calculateSizeY(float baseSize, int baseWindowHeight, int currentWindowHeight);
 
 //==============================
 // Fonction pour calculer une position X en fonction de la taille de la fenêtre
 // Description:
 // La position est basé sur une ancienne position X de l'élément pour une ancienne taille de fenêtre
 //==============================
-static float calculatePositionX(float positionX, int baseWindowWidth, int currentWindowWidth);
+float calculatePositionX(float positionX, int baseWindowWidth, int currentWindowWidth);
 
 //==============================
 // Fonction pour calculer une psotion X en fonction de la taille de la fenêtre
 // Description:
 // La position est basé sur une ancienne position Y de l'élément pour une ancienne taille de fenêtre
 //==============================
-static float calculatePositionY(float positionY, int baseWindowHeight, int currentWindowHeight);
+float calculatePositionY(float positionY, int baseWindowHeight, int currentWindowHeight);
+
+//==============================
+// Fonction pour calculer une valeur en fonction de la taille de la fenêtre et d'un ratio(%)
+//==============================
+float calculateValue(int windowWidth, float ratio);
+
+//==============================
+// Fonction pour calculer une valeur en fonction de la taille de la fenêtre(Width and height) et d'un ratio(%)
+//==============================
+float calculateValue(int windowWidth, int windowHeight, float ratio);

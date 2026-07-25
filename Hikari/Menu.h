@@ -19,9 +19,7 @@
 #include <SFML/Graphics/Text.hpp>
 #include <SFML/Window/Event.hpp>
 #include <SFML/Graphics/RenderWindow.hpp>
-
-#include "MiniMap.h"
-#include "Camera.h"
+#include <SFML/Graphics/Texture.hpp>
 
 // Énumération pour les états du jeu
 enum class GameState {
@@ -30,36 +28,34 @@ enum class GameState {
 	Playing
 };
 
-// Énumération pour les différents menu du jeu
-enum class MenuIndex {
-	MAIN,
-	PAUSE,
-};
-
 // Déclaration anticipée de la classe Menu
 class Menu;
 
-// Structure pour stocker les éléments du menu
+// Structure pour stocker les éléments du bouton
 struct MenuButton {
 	sf::RectangleShape background;
 	sf::Text text;
 
-	Menu* subMenu = nullptr;
-	GameState
+	// Si ce bouton mène à un autre menu
+	Menu* subMenu;
 
-	MenuButton(const sf::Font& font) : text(font) {}
+	// Si ce bouton exécute une action (ex: "PLAY", "QUIT", "FULLSCREEN")
+	std::string action = "";
+
+	MenuButton(const sf::Font& font, Menu* sub = nullptr) : text(font), subMenu(sub) {}
 };
 
-struct OldButtonData {
-	float initialButtonX;
-	float initialButtonY;
-	float buttonW;
-	float buttonH;
-	int buttonTextSize;
-	float textOffSetX = 12.f;
-	float textOffSetY = 8.f;
-	int oldWWidth = 960;
-	int oldWHeight = 576;
+// Structure pour stocker les ratios pour le menu
+struct MenuRatios {
+	float titleSizeRatio;
+	float positionRatioX = 2.f;
+	float positionRatioY = 18.f;
+	float bWidthRatio = 30.f;
+	float bHeightRatio = 7.f;
+	float bSpacingRatio = 2.f;
+	float headerWidthRatio = 4.f;
+	float headerHeightRatio = 5.f;
+	float txtSizeRatio;
 };
 
 //===============================
@@ -70,94 +66,81 @@ const std::string PressStart2P = "Assets/PressStart2P-Regular.ttf";
 //===============================
 // Constantes de couleurs
 //===============================
-sf::Color WHITE_LESS(224, 224, 224);
-sf::Color SUBTLE_WHITE(255, 255, 255, 38); 
-sf::Color SUBTLE_BLACK(0, 0, 0, 38);
-sf::Color WHITE_GRAY(86, 86, 86);
+const sf::Color WHITE_LESS(224, 224, 224);
+const sf::Color SUBTLE_WHITE(255, 255, 255, 38); 
+const sf::Color SUBTLE_BLACK(0, 0, 0, 38);
+const sf::Color WHITE_GRAY(86, 86, 86);
+const sf::Color LessTransparent(0, 0, 0, 128);
 
 class Menu {
 public:
 	//===============================
 	// Constructeur pour l'interface
 	//===============================
-	Menu(std::string fontPath, std::vector<std::string> menuLabels, 
-		std::string name, int size, unsigned int wWidth, unsigned wHeight);
+	Menu(const std::string& fontPath, const std::string& title, int titleSize, sf::Color hColor = sf::Color::White,
+		float positionRatioX = 2.f, float positionRatioY = 55.f,
+		float bWidthRatio = 30.f, float bHeightRatio = 7.f, float bSpacingRatio = 2.f,
+		float headerWidthRatio = 4.f, float headerHeightRatio = 5.f,
+		unsigned int wWidth = 1440, unsigned int wHeight = 864);
 
 	//==============================
 	// Fonction pour initialiser la couleur des boutons (texte et background)
 	//==============================
-	void buttonColors(sf::Color bColor, sf::Color tColor, sf::Color bFill, sf::Color tFill);
+	void setColors(sf::Color bgNormal, sf::Color txtNormal, sf::Color bgHover, sf::Color txtHover);
 
 	//==============================
-	// Fonction pour initialiser la couleur et la position de l'en-tête
+	// Fonction pour ajouter des boutons
 	//==============================
-	void initializeHeader(sf::Color headerColor, float offsetMultiplierX, float positionMultiplierY);
+	void addButton(const std::string& label, const std::string& action, Menu* subMenu = nullptr, const float txtSizeRatio = 1.8f);
 
 	//==============================
-	// Fonction pour initialiser la position des boutons, leur taille et leur espacement
+	// Fonction pour mettre à jour les boutons sélectionner
 	//==============================
-	void initializeButtons(float positionX, float positionY, float buttonW, float buttonH, int buttonTextSize, float textOffSetX, float textOffSetY, int oldWWidth, int oldWHeight);
+	void updateVisuals();
 
 	//==============================
-	// Fonction pour repositionner les menus
+	// Fonction pour gérer les boutons sélectionner par la souris ou le clavier
 	//==============================
-	//void resetMultiUIPosition(std::vector<Menu&> menus, unsigned int newWindowWidth, unsigned int newWindowHeight);
+	std::string handleEvent(const sf::Event& event, const sf::RenderWindow& window, Menu*& currentActiveMenu);
 
 	//==============================
-	// Fonction pour repositionner le menu
+	// Fonction pour activer le "plein écran"
 	//==============================
-	void resetUIPosition(unsigned int newWindowWidth, unsigned int newWindowHeight, float headerPositionX, float headerPositionY);
+	void toggleFullScreen(bool& isFullScreen, sf::RenderWindow& window, std::vector<Menu*>& allMenus);
 
 	//==============================
-	// Fonction pour activer les fonctionnalité de la souris (mouse hover et mouse click)
+	// Fonction pour mettre à jour la taille d'un menu
 	//==============================
-	void activateMouseUI(const sf::Event& event, sf::RenderWindow& window, 
-		Camera& playerCamera, MiniMap& miniMap, GameState& currentGameState, 
-		bool& isFullScreen);
+	void updateLayout(unsigned int& newWWidth, unsigned int& newWHeight);
 
 	//==============================
-	// Fonction pour activer les fonctionnalité des différents menus
+	// Fonction pour dessiner l'arrière plan du menu
 	//==============================
-	void executeMenu(int index, sf::RenderWindow& window, Camera playerCamera, MiniMap minimap);
+	void drawMenuBackground(sf::Color& color, sf::RenderWindow& window);
 
 	//==============================
-	// Fonction pour activer ou désactiver le pleine écran
+	// Fonction pour dessiner l'arrière plan du menu avec une image
 	//==============================
-	void toggleFullScreen(bool& isFullScreen, sf::RenderWindow& window, Camera playerCamera, MiniMap minimap);
+	void drawMenuImageBg(std::string& backgroundImage, sf::RenderWindow& window);
 
 	//==============================
-	// Fonction pour résumer le jeu
+	// Fonction pour dessiner le menu
 	//==============================
-	void resumeGame();
+	void draw(sf::RenderWindow& window);
 
-	//==============================
-	// Fonction pour avoir la position X des boutons
-	//==============================
-	float getStartX() const;
 private:
-	//==============================
-	// Fonction pour initialiser la position des boutons (texte et background)
-	//==============================
-	void initializeBPosition(int buttonTextSize, float textOffSetX, float textOffSetY, int oldWWidth, int oldWHeight);
-
-	//===============================
-
 	unsigned int windowWidth;			// Largeur de la fenêtre
 	unsigned windowHeight;				// Hauteur de la fenêtre
 
 	sf::Font font;						// Police du menu
 
-	std::string menuHeaderName;			// Nom de l'en-tête du menu
-	int menuHeaderSize;					// Taille de l'en-tête du menu
 	sf::Text menuHeader;				// En-tête
 	sf::Color menuHeaderColor;			// Couleur de l'en-tête
 
 	sf::Color backgroundColor;			// Couleur arrière du bouton
 	sf::Color textColor;				// Couleur du texte du bouton
-	sf::Color backgroundFill;			// Couleur arrière du bouton (Remplie)
-	sf::Color textFill;					// Couleur du texte du bouton (Remplie)
-
-	std::vector<std::string> labels;	// Étiquette du menu
+	sf::Color backgroundHover;			// Couleur arrière du bouton (Hover)
+	sf::Color textHover;				// Couleur du texte du bouton (Hover)
 
 	std::vector<MenuButton> menu;		// Vecteur pour les différents bouton du menu
 	int selectedIndex = 0;				// Index sélectionner par l'utilisateur
@@ -168,14 +151,7 @@ private:
 	float buttonHeight;					// Hauteur d'un bouton
 	float spacing;						// Espace entre chaque bouton
 
-	float initialButtonX;				// Position X du premier bouton du menu
-	float initialButtonY;				// Position Y du premier bouton du menu
+	MenuRatios menuRatios;				// Donncées de ratios pour redimensionner le menu
 
-	OldButtonData oldButtonData;		// Ancienne données d'un boutons à l'initialisation pour facilité le replacement
-
-	MenuIndex menuIndex;				// Index pour les différents menus
-
-	GameState gameState;				// État du jeu
-
-	bool fullScreen;					// Toggle pour le pleine écran
+	Menu* previousActiveMenu;			// Menu précédent pour pouvoir revenir en arrière
 };

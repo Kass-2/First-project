@@ -10,13 +10,14 @@
 //===============================
 // Inclusion des bibliothèques
 //===============================
-#include "GameHeaders.h"
+#include <string>
+#include <vector>
 
 //===============================
 // Constantes pour la taille des tuiles et les dimensions de la carte
 //===============================
-unsigned int windowWidth = 1440;
-unsigned int windowHeight = 864;
+extern unsigned int windowWidth;
+extern unsigned int windowHeight;
 const int TILE_SIZE = 32;
 
 //const int MAP_WIDTH = windowWidth / TILE_SIZE;   // Nombre de tuiles en largeur
@@ -36,10 +37,10 @@ bool loadCSV(const std::string& filename, std::vector<int>& map, int& width, int
 void loadMap(int* map, const std::vector<int>& mapData, const int MAX_TILES);
 
 
-int getWindowWidth() {
+inline unsigned int getWindowWidth() {
 	return windowWidth;
 }
 
-int getWindowHeight() {
+inline unsigned int getWindowHeight() {
 	return windowHeight;
 }

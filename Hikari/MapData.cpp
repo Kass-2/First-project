@@ -7,6 +7,12 @@
 
 #include "GameHeaders.h"
 
+//===============================
+// Constantes pour la taille des tuiles et les dimensions de la carte
+//===============================
+unsigned int windowWidth = 1440;
+unsigned int windowHeight = 864;
+
 // TODO : Revoir cette fonction, car j'ai pas vraiment compris comment elle fonctionne, et je pense qu'elle peut être améliorée
 bool loadCSV(const std::string& filename, std::vector<int>& map, int& width, int& height)
 {

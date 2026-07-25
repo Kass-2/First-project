@@ -31,7 +31,7 @@
 #include "Camera.h"
 #include "HitBox.h"
 #include "Functions.h"
-#include "GameUI.h"
+#include "Menu.h"
 
 // Structure pour stocker les éléments à rendre avec leur position Y
 struct RenderItem {
@@ -39,19 +39,20 @@ struct RenderItem {
 	std::function<void()> drawCall;
 };
 
-struct MenuText {
-	// Vecteur pour les différents étiquettes du "Main Menu"
-	std::vector<std::string> mainMenuLabels = {
-		"PLAY", "SETTINGS", "CREDITS", "QUIT",
-	};
-
-	// Vecteur pour les différents étiquettes du "Pause Menu"
-	std::vector<std::string> PauseMenuLabels = {
-		"RESUME", "SETTINGS", "EXIT TO MAIN MENU",
-	};
-};
-// Étiquette des différents menus
-MenuText menuLabels;
+//struct MenuButtons {
+//	// Vecteur pour les différents étiquettes du "Main Menu"
+//	std::vector<MenuButton> mainMenuLabels = {
+//
+//		"PLAY", "SETTINGS", "CREDITS", "QUIT",
+//	};
+//
+//	// Vecteur pour les différents étiquettes du "Pause Menu"
+//	std::vector<std::string> PauseMenuLabels = {
+//		"RESUME", "SETTINGS", "EXIT TO MAIN MENU",
+//	};
+//};
+//// Étiquette des différents menus
+//MenuButtons menuButtons;
 
 int main()
 {
@@ -62,154 +63,69 @@ int main()
 	window.setFramerateLimit(60);
 	//window.setVerticalSyncEnabled(true);
 
-
-	// IMPORTANT
-	/*(startX * offsetMultiplierX);
-	(windowHeight * positionMultiplierY)*/
-
-
 	//===============================
-	// Création du UI pour les menu différents
+	// Initialisation des menus différents
 	//===============================
+	std::vector<Menu*> allMenus;
 	
-	//// Police pour le texte du menu principal
-	//sf::Font mainMenuFont;
-	//if (!mainMenuFont.openFromFile(PressStart2P))
-	//{
-	//	std::cerr << "Erreur lors du chargement de la police de texte" << std::endl;
-	//	return -1;
-	//}
+	// Menu principal
+	Menu mainMenu(PressStart2P, "HIKARI", 70);
+	// Menu de paramètres (Menu principal)
+	Menu mainMenuSettings(PressStart2P, "SETTINGS", 70);
+	// Menu de pause
+	Menu pauseMenu(PressStart2P, "PAUSE MENU", 40, sf::Color::White, 2.f, 40.f);
+	// Menu de paramètres (Menu principal)
+	Menu pauseMenuSettings(PressStart2P, "SETTINGS", 40, sf::Color::White, 2.f, 40.f);
 
-	//// Vecteur pour les différents étiquettes du "Main Menu"
-	//std::vector<std::string> menuLabels = {
+	// Couleurs pour les menus
+	mainMenu.setColors(sf::Color::Transparent, sf::Color::Black, LessTransparent, sf::Color::White);
+	mainMenuSettings.setColors(sf::Color::Transparent, sf::Color::Black, LessTransparent, sf::Color::White);
+	pauseMenu.setColors(sf::Color::Transparent, sf::Color::Black, LessTransparent, sf::Color::White);
+	pauseMenuSettings.setColors(sf::Color::Transparent, sf::Color::Black, LessTransparent, sf::Color::White);
+
+
+	//// Vecteurs pour les étiquettes du menu principal
+	//std::vector<std::string> mainMenuLabels = {
+	//	// Pour le menu principal
 	//	"PLAY", "SETTINGS", "CREDITS", "QUIT",
+	//	// Pour les paramètres du menu principal
+	//	"TOGGLE FULLSCREEN", "BACK"
 	//};
 
-	//// Vecteur pour les différents bouton du "Main Menu"
-	//std::vector<MenuButton> mainMenu;
-	//int selectedMainIndex = 0;
+	//// Vecteurs pour les étiquettes du menu de pause
+	//std::vector<std::string> pauseMenuLabels = {
+	//	// Pour le menu de pause
+	//	"RESUME", "SETTINGS", "EXIT TO MAIN MENU",
+	//	// Pour les paramètres du menu principal
+	//	"TOGGLE FULLSCREEN", "BACK"
+	//};
 
-	//float startXMain = windowWidth * 0.0208f;
-	//float startYMain = windowHeight * 0.694f;
-	//float buttonWidthMain = windowWidth * 0.156f;
-	//float buttonHeightMain = windowHeight * 0.052f;
-	//float spacingMain = windowHeight * 0.0173f;
 
-	//// Taille de la police de l'en-tête
-	//int MMHeaderSize = calculateSize(70, 960, 576, windowWidth, windowHeight);	// Taille de la police de l'en-tête
-	//// En-tête "MAIN MENU"
-	//sf::Text MMHeader(mainMenuFont, "HIKARI", MMHeaderSize);
-	//MMHeader.setFillColor(sf::Color::White);
+	// Ajouter les boutons des menus
+	mainMenu.addButton("PLAY", "PLAY");
+	mainMenu.addButton("SETTINGS", "", &mainMenuSettings);
+	mainMenu.addButton("CREDITS", "CREDITS");
+	mainMenu.addButton("QUIT", "QUIT");
 
-	//// Positionnement Y de l'en-tête du menu principal
-	//float MMHeaderOffsetY = calculateSizeY(50.f, 576, windowHeight);	
-	//MMHeader.setPosition({ (startXMain * 1.5f), MMHeaderOffsetY });
+	mainMenuSettings.addButton("TOGGLE FULLSCREEN", "FULLSCREEN");
+	mainMenuSettings.addButton("BACK", "", &mainMenu);
 
-	//// Génération les boutons du menu principal
-	//for (size_t i = 0; i < menuLabels.size(); ++i) {
-	//	MenuButton mainButton(mainMenuFont);
+	pauseMenu.addButton("RESUME", "RESUME");
+	pauseMenu.addButton("SETTINGS", "", &pauseMenuSettings);
+	pauseMenu.addButton("EXIT TO MAIN MENU", "MAIN MENU");
 
-	//	// Configuration de l'arrière du bouton
-	//	mainButton.background.setSize({ buttonWidthMain, buttonHeightMain });
-	//	mainButton.background.setPosition({ startXMain, startYMain + i * (buttonHeightMain + spacingMain) });
+	pauseMenuSettings.addButton("TOGGLE FULLSCREEN", "FULLSCREEN");
+	pauseMenuSettings.addButton("BACK", "", &pauseMenu);
 
-	//	// Remplissage du texte des boutons
-	//	if (i == 0) {
-	//		mainButton.background.setFillColor(sf::Color::Transparent);
-	//	}
-	//	else {
-	//		mainButton.background.setFillColor(sf::Color::Transparent);
-	//	}
+	// Ajouter les menus au vecteur pour faciliter le redimensionnement
+	allMenus.push_back(&mainMenu);
+	allMenus.push_back(&mainMenuSettings);
+	allMenus.push_back(&pauseMenu);
+	allMenus.push_back(&pauseMenuSettings);
 
-	//	// Taille de la police du texte à l'intérieur du bouton
-	//	int mainButtonSize = calculateSize(14, 960, 576, windowWidth, windowHeight);	// Taille de la police de l'en-tête
-	//	// Configuration du texte à l'intérieur du bouton
-	//	mainButton.text = sf::Text(mainMenuFont, menuLabels[i], mainButtonSize);
-	//	if (i == 0) {
-	//		mainButton.text.setFillColor(sf::Color::White);
-	//	}
-	//	else {
-	//		mainButton.text.setFillColor(sf::Color::Black);
-	//	}
-
-	//	float buttonOffSetXMain = calculateSizeX(12.f, 960, windowWidth);
-	//	float buttonOffSetYMain = calculateSizeY(8.f, 576, windowHeight);
-	//	// Centrer le texte verticalement à l'intérieur du rectangle
-	//	mainButton.text.setPosition({ startXMain + buttonOffSetXMain, startYMain + i * (buttonHeightMain + spacingMain) + buttonOffSetYMain });
-
-	//	mainMenu.push_back(mainButton);
-	//}
+	// Menu actif présentement
+	Menu* activeMenu = &mainMenu;
 	
-	//===============================
-	// Création du menu de pause
-	//===============================
-	// Police pour le texte du menu de pause
-	sf::Font pauseMenuFont;
-	if (!pauseMenuFont.openFromFile(PressStart2P))
-	{
-		std::cerr << "Erreur lors du chargement de la police de texte" << std::endl;
-		return -1;
-	}
-
-	// Vecteur pour les différents étiquettes du "Pause Menu"
-	std::vector<std::string> pauseLabels = {
-		"RESUME", "SETTINGS", "EXIT TO MAIN MENU",
-	};
-
-	// Vecteur pour les différents bouton du "Pause Menu"
-	std::vector<MenuButton> pauseMenu;
-	int selectedPauseIndex = 0;
-
-	float startX = windowWidth * 0.0208f;
-	float startY = windowHeight * 0.1736f;
-	float buttonWidth = windowWidth * 0.3125f;
-	float buttonHeight = windowHeight * 0.0694f;
-	float spacing = windowHeight * 0.0173f;
-
-	// Taille de la police de l'en-tête
-	int pauseHeaderSize = calculateSize(30, 960, 576, windowWidth, windowHeight);
-	// En-tête "PAUSE MENU"
-	sf::Text pauseHeader(pauseMenuFont, "PAUSE MENU", pauseHeaderSize);
-	pauseHeader.setFillColor(sf::Color::White);
-
-	// Positionnement Y de l'en-tête du menu de pause
-	float pauseHeaderOffsetY = calculateSizeY(30.f, 576, windowHeight);
-	pauseHeader.setPosition({ (startX * 1.75f), pauseHeaderOffsetY });
-
-	// Génération les boutons du menu de pause
-	for (size_t i = 0; i < pauseLabels.size(); ++i) {
-		MenuButton button(pauseMenuFont);
-
-		// Configuration de l'arrière du bouton
-		button.background.setSize({ buttonWidth, buttonHeight });
-		button.background.setPosition({ startX, startY + i * (buttonHeight + spacing) });
-
-		// Remplissage du texte des boutons
-		if (i == 0) {
-			button.background.setFillColor(sf::Color(SUBTLE_BLACK));
-		}
-		else {
-			button.background.setFillColor(sf::Color::Transparent);
-		}
-
-		int pauseButtonSize = calculateSize(14, 960, 576, windowWidth, windowHeight);	// Taille de la police de l'en-tête
-		// Configuration du texte à l'intérieur du bouton
-		button.text = sf::Text(pauseMenuFont, pauseLabels[i], pauseButtonSize);
-		if (i == 0) {
-			button.text.setFillColor(sf::Color::White);
-		}
-		else {
-			button.text.setFillColor(sf::Color::Black);
-		}
-
-		float buttonOffSetX = calculateSizeX(15.f, 960, windowWidth);
-		float buttonOffSetY = calculateSizeY(14.f, 576, windowHeight);
-		// Centrer le texte verticalement à l'intérieur du rectangle
-		button.text.setPosition({ startX + buttonOffSetX, startY + i * (buttonHeight + spacing) + buttonOffSetY });
-
-		pauseMenu.push_back(button);
-	}
-
 	//===============================
 	// Création du sprite et de la texture du joueur
 	//===============================
@@ -295,6 +211,7 @@ int main()
 	//===============================
     while (window.isOpen())
     {
+		// Delta time pour gérer...
 		float dt = deltaClock.restart().asSeconds();
 
 		if (dt > 0.1f) {
@@ -304,298 +221,92 @@ int main()
 		//===============================
 		// Gestion des événements de la fenêtre
 		//===============================
-        while (auto event = window.pollEvent())
-        {
-            if (event->is<sf::Event::Closed>())
-                window.close();
+		while (auto event = window.pollEvent()) 
+		{
+			if (event->is<sf::Event::Closed>())
+				window.close();
 
 			switch (currentGameState) {
-			case GameState::Menu:
-				// Gérer les événements du menu principal ici
-				//// Mouse Hover Logic
-				//if (const auto* mouseMoved = event->getIf<sf::Event::MouseMoved>()) {
-				//	sf::Vector2f mousePos = window.mapPixelToCoords(mouseMoved->position);
+				// --- MAIN MENU CONTROLS ---
+				case GameState::Menu:
+				{
+					std::string action = activeMenu->handleEvent(*event, window, activeMenu);
 
-				//	for (size_t i = 0; i < mainMenu.size(); ++i) {
-				//		if (mainMenu[i].background.getGlobalBounds().contains(mousePos)) {
-				//			// Reset old selected button to default look
-				//			mainMenu[selectedMainIndex].background.setFillColor(sf::Color::Transparent);
-				//			mainMenu[selectedMainIndex].text.setFillColor(sf::Color::Black);
-
-				//			// Highlight new hovered button
-				//			selectedMainIndex = i;
-
-				//			// Put the new hovered button to highlighted look
-				//			mainMenu[selectedMainIndex].background.setFillColor(sf::Color::Transparent);
-				//			mainMenu[selectedMainIndex].text.setFillColor(sf::Color::White);
-				//		}
-				//	}
-				//}
-
-				//// Mouse Click Logic
-				//if (const auto* mousePressed = event->getIf<sf::Event::MouseButtonPressed>()) {
-				//	if (mousePressed->button == sf::Mouse::Button::Left) {
-				//		sf::Vector2f mousePos = window.mapPixelToCoords(mousePressed->position);
-
-				//		for (size_t i = 0; i < mainMenu.size(); ++i) {
-				//			if (mainMenu[i].background.getGlobalBounds().contains(mousePos)) {
-				//				if (i == 0) currentGameState = GameState::Playing; // Resume
-				//				else if (i == 1) {
-				//					isFullscreen = !isFullscreen;
-				//					if (isFullscreen) {
-				//						window.create(sf::VideoMode::getDesktopMode(), "Hikari",
-				//							sf::Style::Default, sf::State::Fullscreen);
-				//					}
-				//					else {
-				//						window.create(sf::VideoMode({ 1440, 864 }), "Hikari",
-				//							sf::Style::Default, sf::State::Windowed);
-				//					}
-				//					window.setFramerateLimit(60);
-
-				//					// Retrieve the actual new window dimensions
-				//					windowWidth = window.getSize().x;
-				//					windowHeight = window.getSize().y;
-
-				//					// Update UI Layout positions and sizes
-				//					recalculateLayout(windowWidth, windowHeight, mainMenuFont,
-				//						pauseMenuFont, MMHeader, mainMenu, pauseHeader, pauseMenu);
-
-				//					// Update Camera and Minimap dimensions
-				//					playerCamera.updateSize(windowWidth, windowHeight, 0.7f);
-				//					miniMap.updateWindowSize(windowWidth, windowHeight);
-				//				}
-				//				else if (i == 2) ;
-				//				else if (i == 3) window.close();
-				//			}
-				//		}
-				//	}
-				//}
-
-				// Keyboard Logic (Navigate Pause Menu)
-				if (const auto* keyPressed = event->getIf<sf::Event::KeyPressed>()) {
-					if (keyPressed->code == sf::Keyboard::Key::Up) {
-						if (selectedMainIndex - 1 >= 0) {
-							// Reset old selected button to default look
-							mainMenu[selectedMainIndex].background.setFillColor(sf::Color::Transparent);
-							mainMenu[selectedMainIndex].text.setFillColor(sf::Color::Black);
-							
-							// Move to the previous button in the menu
-							selectedMainIndex--;
-							
-							// Put the new hovered button to highlighted look
-							mainMenu[selectedMainIndex].background.setFillColor(sf::Color::Transparent);
-							mainMenu[selectedMainIndex].text.setFillColor(sf::Color::White);
-						}
-					}
-					else if (keyPressed->code == sf::Keyboard::Key::Down) {
-						if (selectedMainIndex + 1 < mainMenu.size()) {
-							// Reset old selected button to default look
-							mainMenu[selectedMainIndex].background.setFillColor(sf::Color::Transparent);
-							mainMenu[selectedMainIndex].text.setFillColor(sf::Color::Black);
-
-							// Move to the next button in the menu
-							selectedMainIndex++;
-
-							// Put the new hovered button to highlighted look
-							mainMenu[selectedMainIndex].background.setFillColor(sf::Color::Transparent);
-							mainMenu[selectedMainIndex].text.setFillColor(sf::Color::White);
-						}
-					}
-					else if (keyPressed->code == sf::Keyboard::Key::Enter) {
-						if (selectedMainIndex == 0) currentGameState = GameState::Playing;
-						else if (selectedMainIndex == 1) {
-							isFullscreen = !isFullscreen;
-							if (isFullscreen) {
-								window.create(sf::VideoMode::getDesktopMode(), "Hikari",
-									sf::Style::Default, sf::State::Fullscreen);
-							}
-							else {
-								window.create(sf::VideoMode({ 1440, 864 }), "Hikari",
-									sf::Style::Default, sf::State::Windowed);
-							}
-							window.setFramerateLimit(60);
-
-							// Retrieve the actual new window dimensions
-							windowWidth = window.getSize().x;
-							windowHeight = window.getSize().y;
-
-							// Update UI Layout positions and sizes
-							recalculateLayout(windowWidth, windowHeight, mainMenuFont,
-								pauseMenuFont, MMHeader, mainMenu, pauseHeader, pauseMenu);
-
-							// Update Camera and Minimap dimensions
-							playerCamera.updateSize(windowWidth, windowHeight, 0.7f);
-							miniMap.updateWindowSize(windowWidth, windowHeight);
-						}
-						else if (selectedMainIndex == 2) ;
-						else if (selectedMainIndex == 3) window.close();
-					}
-				}
-				break;
-			// --- GAMEPLAY CONTROLS ---
-			case GameState::Playing:
-				// Gérer les événements du jeu en cours ici
-				if (const auto* keyPressed = event->getIf<sf::Event::KeyPressed>()) {
-					if (keyPressed->code == sf::Keyboard::Key::Escape) {
-						// Arreter le jeu et passer au menu de pause
-						currentGameState = GameState::PauseMenu;
-						
-						// Réinitialiser les entrées du joueur pour éviter les mouvements pendant le menu de pause
-						playerCharacter.resetInputs();				
-					}
-				}
-				break;
-			// --- PAUSE MENU CONTROLS ---
-			case GameState::PauseMenu:
-				// Gérer les événements du menu de pause ici
-
-				// Mouse Hover Logic
-				if (const auto* mouseMoved = event->getIf<sf::Event::MouseMoved>()) {
-					sf::Vector2f mousePos = window.mapPixelToCoords(mouseMoved->position);
-
-					for (size_t i = 0; i < pauseMenu.size(); ++i) {
-						if (pauseMenu[i].background.getGlobalBounds().contains(mousePos)) {
-							// Reset old selected button to default look
-							pauseMenu[selectedPauseIndex].background.setFillColor(sf::Color::Transparent);
-							pauseMenu[selectedPauseIndex].text.setFillColor(sf::Color::Black);
-
-							// Highlight new hovered button
-							selectedPauseIndex = i;
-
-							// Put the new hovered button to highlighted look
-							pauseMenu[selectedPauseIndex].background.setFillColor(sf::Color(SUBTLE_BLACK));
-							pauseMenu[selectedPauseIndex].text.setFillColor(sf::Color::White);
-						}
-					}
-				}
-
-				// Mouse Click Logic
-				if (const auto* mousePressed = event->getIf<sf::Event::MouseButtonPressed>()) {
-					if (mousePressed->button == sf::Mouse::Button::Left) {
-						sf::Vector2f mousePos = window.mapPixelToCoords(mousePressed->position);
-
-						for (size_t i = 0; i < pauseMenu.size(); ++i) {
-							if (pauseMenu[i].background.getGlobalBounds().contains(mousePos)) {
-								if (i == 0) currentGameState = GameState::Playing; // Resume
-								else if (i == 1) {
-									isFullscreen = !isFullscreen;
-									if (isFullscreen) {
-										window.create(sf::VideoMode::getDesktopMode(), "Hikari",
-											sf::Style::Default, sf::State::Fullscreen);
-									}
-									else {
-										window.create(sf::VideoMode({ 1440, 864 }), "Hikari",
-											sf::Style::Default, sf::State::Windowed);
-									}
-									window.setFramerateLimit(60);
-
-									// Retrieve the actual new window dimensions
-									windowWidth = window.getSize().x;
-									windowHeight = window.getSize().y;
-
-									// Update UI Layout positions and sizes
-									recalculateLayout(windowWidth, windowHeight, mainMenuFont,
-										pauseMenuFont, MMHeader, mainMenu, pauseHeader, pauseMenu);
-
-									// Update Camera and Minimap dimensions
-									playerCamera.updateSize(windowWidth, windowHeight, 0.7f);
-									miniMap.updateWindowSize(windowWidth, windowHeight);
-								}
-								else if (i == 2) currentGameState = GameState::Menu; // Go to main menu
-							}
-						}
-					}
-				}
-
-				// Keyboard Logic (Navigate Pause Menu)
-				if (const auto* keyPressed = event->getIf<sf::Event::KeyPressed>()) {
-                    if (keyPressed->code == sf::Keyboard::Key::Up) {
-                        if (selectedPauseIndex - 1 >= 0) {
-							// Reset old selected button to default look
-                            pauseMenu[selectedPauseIndex].background.setFillColor(sf::Color::Transparent);
-							pauseMenu[selectedPauseIndex].text.setFillColor(sf::Color::Black);
-
-							// Move to the previous button in the menu
-                            selectedPauseIndex--;
-
-							// Put the new hovered button to highlighted look
-							pauseMenu[selectedPauseIndex].background.setFillColor(sf::Color(SUBTLE_BLACK));
-                            pauseMenu[selectedPauseIndex].text.setFillColor(sf::Color::White);
-                        }
-                    } 
-                    else if (keyPressed->code == sf::Keyboard::Key::Down) {
-                        if (selectedPauseIndex + 1 < pauseMenu.size()) {
-							// Reset old selected button to default look
-                            pauseMenu[selectedPauseIndex].background.setFillColor(sf::Color::Transparent);
-							pauseMenu[selectedPauseIndex].text.setFillColor(sf::Color::Black);
-
-							// Move to the next button in the menu
-                            selectedPauseIndex++;
-
-							// Put the new hovered button to highlighted look
-							pauseMenu[selectedPauseIndex].background.setFillColor(sf::Color(SUBTLE_BLACK));
-                            pauseMenu[selectedPauseIndex].text.setFillColor(sf::Color::White);
-                        }
-                    } 
-                    else if (keyPressed->code == sf::Keyboard::Key::Enter) {
-                        if (selectedPauseIndex == 0) currentGameState = GameState::Playing;
-                        else if (selectedPauseIndex == 1) {
-							isFullscreen = !isFullscreen;
-							if (isFullscreen) {
-								window.create(sf::VideoMode::getDesktopMode(), "Hikari",
-									sf::Style::Default, sf::State::Fullscreen);
-							}
-							else {
-								window.create(sf::VideoMode({ 1440, 864 }), "Hikari",
-									sf::Style::Default, sf::State::Windowed);
-							}
-							window.setFramerateLimit(60);
-
-							// Retrieve the actual new window dimensions
-							windowWidth = window.getSize().x;
-							windowHeight = window.getSize().y;
-
-							// Update UI Layout positions and sizes
-							recalculateLayout(windowWidth, windowHeight, mainMenuFont,
-								pauseMenuFont, MMHeader, mainMenu, pauseHeader, pauseMenu);
-
-							// Update Camera and Minimap dimensions
-							playerCamera.updateSize(windowWidth, windowHeight, 0.7f);
-							miniMap.updateWindowSize(windowWidth, windowHeight);
-						}
-						else if (selectedPauseIndex == 2) currentGameState = GameState::Menu;
-                    }
-                }
-
-				// Keyboard Logic (Unpause with ESC)
-				if (const auto* keyPressed = event->getIf<sf::Event::KeyPressed>()) {
-					if (keyPressed->code == sf::Keyboard::Key::Escape) {
+					if (action == "PLAY") {
 						currentGameState = GameState::Playing;
 					}
+					else if (action == "FULLSCREEN") {
+						activeMenu->toggleFullScreen(isFullscreen, window, allMenus);
+
+						// Update Camera and Minimap dimensions
+						playerCamera.updateSize(windowWidth, windowHeight, 0.7f);
+						miniMap.updateWindowSize(windowWidth, windowHeight);
+					}
+					else if (action == "CREDITS") {
+						std::cout << "Nothing yet" << std::endl;
+					}
+					else if (action == "QUIT") {
+						window.close();
+					}
+					break;
 				}
-				break;
-			}
+				// --- PAUSE MENU CONTROLS ---
+				case GameState::PauseMenu:
+				{
+					std::string action = activeMenu->handleEvent(*event, window, activeMenu);
 
-			if (const auto* keyPressed = event->getIf<sf::Event::KeyPressed>()) {
-				if (keyPressed->code == sf::Keyboard::Key::H &&
-					keyPressed->shift &&
-					keyPressed->control) {
-					showHitboxes = !showHitboxes;
+					if (action == "RESUME" || action == "ESCAPE") {
+						currentGameState = GameState::Playing;
+					}
+					else if (action == "FULLSCREEN") {
+						activeMenu->toggleFullScreen(isFullscreen, window, allMenus);
+
+						// Update Camera and Minimap dimensions
+						playerCamera.updateSize(windowWidth, windowHeight, 0.7f);
+						miniMap.updateWindowSize(windowWidth, windowHeight);
+					}
+					else if (action == "MAIN MENU") {
+						currentGameState = GameState::Menu;
+						activeMenu = &mainMenu; // On s'assure de revenir au Main Menu
+					}
+					break;
+				}
+				// --- GAMEPLAY CONTROLS ---
+				case GameState::Playing:
+				{
+					if (const auto* keyPressed = event->getIf<sf::Event::KeyPressed>()) {
+						if (keyPressed->code == sf::Keyboard::Key::Escape) {
+							// Arreter le jeu et passer au menu de pause
+							currentGameState = GameState::PauseMenu;
+							activeMenu = &pauseMenu;
+
+							// Réinitialiser les entrées du joueur pour éviter les mouvements pendant le menu de pause
+							playerCharacter.resetInputs();
+						}
+					}
+
+					if (const auto* keyPressed = event->getIf<sf::Event::KeyPressed>()) {
+						if (keyPressed->code == sf::Keyboard::Key::H &&
+							keyPressed->shift &&
+							keyPressed->control) {
+							showHitboxes = !showHitboxes;
+						}
+					}
+
+					/*for (int i = 0; i < players.size(); ++i) {
+						players[i].handleEvent(*event);
+					}*/
+
+					miniMap.handleEvent(*event);
+
+					// Pour éviter que le joueur ne se déplace lorsqu'il est dans le menu de pause
+					playerCharacter.handleEvent(*event);
+					testCharacter.handleEvent(*event);
+
+					break;
 				}
 			}
-
-			/*for (int i = 0; i < players.size(); ++i) {
-				players[i].handleEvent(*event);
-			}*/
-
-			miniMap.handleEvent(*event);
-
-			// Pour éviter que le joueur ne se déplace lorsqu'il est dans le menu de pause
-			if (currentGameState == GameState::Playing) {
-				playerCharacter.handleEvent(*event);
-				testCharacter.handleEvent(*event);
-			}
-        }
+		}
 
 		sf::FloatRect playerHitbox;
 		sf::FloatRect testHitbox;
@@ -621,85 +332,72 @@ int main()
 		// Pour le rendu, on efface la fenêtre avec une couleur noire
         window.clear(sf::Color::Black);
 
-		if (currentGameState == GameState::Menu) {
-			// Dessiner une image de fond pour le menu principal
-			/*sf::Texture backgroundTexture;
-			if (!backgroundTexture.loadFromFile("Assets/MainMenuBackground.png")) {
-				std::cerr << "Erreur lors du chargement de l'image de fond" << std::endl;
-				return -1;
+		switch (currentGameState) {
+			case GameState::Menu:
+			{
+				// Dessiner un background sombre pour le menu principal (Temporaire)
+				sf::Color bgColor = sf::Color(58, 58, 58);
+
+				activeMenu->drawMenuBackground(bgColor, window);
+				activeMenu->draw(window);
+
+				break;
 			}
-			sf::Sprite backgroundSprite(backgroundTexture);
-			window.draw(backgroundSprite);*/
+			// Pour le rendu, on vérifie si le jeu est en cours ou en pause pour dessiner les éléments du jeu
+			case GameState::Playing:
+			case GameState::PauseMenu:
+			{
+				// Appliquer la vue de la caméra à la fenêtre
+				playerCamera.apply(window);
 
-			// Dessiner un background sombre pour le menu principal (Temporaire)
-			sf::RectangleShape mainMenuBackground(sf::Vector2f(windowWidth, windowHeight));
-			mainMenuBackground.setFillColor(sf::Color(58, 58, 58));
-			window.draw(mainMenuBackground);
+				window.draw(tileMap);
 
-			// Draw Main Menu UI elements
-			window.draw(MMHeader);
-			for (const auto& button : mainMenu) {
-				window.draw(button.background);
-				window.draw(button.text);
-			}
-		}
-		// Pour le rendu, on vérifie si le jeu est en cours ou en pause pour dessiner les éléments du jeu
-		else if (currentGameState == GameState::Playing || currentGameState == GameState::PauseMenu) {
-			// Appliquer la vue de la caméra à la fenêtre
-			playerCamera.apply(window);
+				std::vector<RenderItem> renderQueue;
 
-			window.draw(tileMap);
+				renderQueue.push_back({ sprite.getPosition().y, [&]()
+					{ playerCharacter.draw(window, sprite); } });
+				renderQueue.push_back({ testSprite.getPosition().y, [&]()
+					{ testCharacter.draw(window, testSprite); } });
 
-			std::vector<RenderItem> renderQueue;
+				// TODO : Ajouter d'autres éléments à la file d'attente de rendu si nécessaire
 
-			renderQueue.push_back({ sprite.getPosition().y, [&]()
-				{ playerCharacter.draw(window, sprite); } });
-			renderQueue.push_back({ testSprite.getPosition().y, [&]()
-				{ testCharacter.draw(window, testSprite); } });
+				// Trier par la position Y des éléments
+				std::sort(renderQueue.begin(), renderQueue.end(), [](const RenderItem& a, const RenderItem& b)
+					{
+						return a.y < b.y;
+					});
 
-			// TODO : Ajouter d'autres éléments à la file d'attente de rendu si nécessaire
-
-			// Trier par la position Y des éléments
-			std::sort(renderQueue.begin(), renderQueue.end(), [](const RenderItem& a, const RenderItem& b)
-				{
-					return a.y < b.y;
-				});
-
-			// Dessiner les éléments dans l'ordre trié
-			for (const auto& item : renderQueue) {
-				item.drawCall();
-			}
-
-			// Dessiner les hitboxes si l'option est activée
-			if (showHitboxes) {
-				drawHitboxOutline(window, playerHitbox);
-				drawHitboxOutline(window, testHitbox);
-			}
-			
-			// Reset view to default for UI rendering)
-			window.setView(window.getDefaultView()); 
-
-			playerHealthBar.draw(window, { 20.f, 20.f });
-
-			miniMap.draw(window, tileMap, playerCharacter, sprite, testCharacter, testSprite);
-
-			applyCameraUI(window);
-
-			if (currentGameState == GameState::PauseMenu) {
-				// Draw a dark full-screen overlay to dim the game world
-				sf::RectangleShape dimOverlay(sf::Vector2f(1920.f, 1080.f));
-				dimOverlay.setFillColor(sf::Color(0, 0, 0, 150)); // Alpha 150 dims background
-				window.draw(dimOverlay);
-
-				// Draw Pause Menu UI elements
-				window.draw(pauseHeader);
-				for (const auto& button : pauseMenu) {
-					window.draw(button.background);
-					window.draw(button.text);
+				// Dessiner les éléments dans l'ordre trié
+				for (const auto& item : renderQueue) {
+					item.drawCall();
 				}
+
+				// Dessiner les hitboxes si l'option est activée
+				if (showHitboxes) {
+					drawHitboxOutline(window, playerHitbox);
+					drawHitboxOutline(window, testHitbox);
+				}
+
+				// Reset view to default for UI rendering)
+				window.setView(window.getDefaultView());
+
+				playerHealthBar.draw(window, { 20.f, 20.f });
+
+				miniMap.draw(window, tileMap, playerCharacter, sprite, testCharacter, testSprite);
+
+				applyCameraUI(window);
+
+				if (currentGameState == GameState::PauseMenu) {
+					// Draw a dark full-screen overlay to dim the game world
+					sf::Color dimColor = sf::Color(0, 0, 0, 150);
+
+					activeMenu->drawMenuBackground(dimColor, window);
+					activeMenu->draw(window);
+				}
+
+				break;
 			}
 		}
-
         window.display();
     }
 	return 0;

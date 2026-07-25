@@ -8,6 +8,7 @@
 
 #include <SFML/System/Vector2.hpp>
 #include <string>
+#include <SFML/System/Clock.hpp>
 
 // Enumération pour les différentes directions du joueur
 enum class Direction
