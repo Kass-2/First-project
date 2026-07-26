@@ -30,7 +30,6 @@
 #include "HealthBar.h"
 #include "Camera.h"
 #include "HitBox.h"
-#include "Functions.h"
 #include "Menu.h"
 
 // Structure pour stocker les éléments à rendre avec leur position Y
@@ -38,21 +37,6 @@ struct RenderItem {
 	float y;
 	std::function<void()> drawCall;
 };
-
-//struct MenuButtons {
-//	// Vecteur pour les différents étiquettes du "Main Menu"
-//	std::vector<MenuButton> mainMenuLabels = {
-//
-//		"PLAY", "SETTINGS", "CREDITS", "QUIT",
-//	};
-//
-//	// Vecteur pour les différents étiquettes du "Pause Menu"
-//	std::vector<std::string> PauseMenuLabels = {
-//		"RESUME", "SETTINGS", "EXIT TO MAIN MENU",
-//	};
-//};
-//// Étiquette des différents menus
-//MenuButtons menuButtons;
 
 int main()
 {
@@ -202,7 +186,7 @@ int main()
 	bool showHitboxes = false;
 
 	// Variable pour gérer l'état du jeu (menu de pause ou en cours de jeu)
-	GameState currentGameState = GameState::Menu;
+	GameState currentGameState = GameState::Playing;
 
 	bool isFullscreen = false;
 
@@ -239,8 +223,8 @@ int main()
 						activeMenu->toggleFullScreen(isFullscreen, window, allMenus);
 
 						// Update Camera and Minimap dimensions
-						playerCamera.updateSize(windowWidth, windowHeight, 0.7f);
-						miniMap.updateWindowSize(windowWidth, windowHeight);
+						playerCamera.updateSize(window.getSize().x, window.getSize().y, 604.8f / window.getSize().y);
+						miniMap.updateWindowSize(window.getSize().x, window.getSize().y);
 					}
 					else if (action == "CREDITS") {
 						std::cout << "Nothing yet" << std::endl;
@@ -262,8 +246,8 @@ int main()
 						activeMenu->toggleFullScreen(isFullscreen, window, allMenus);
 
 						// Update Camera and Minimap dimensions
-						playerCamera.updateSize(windowWidth, windowHeight, 0.7f);
-						miniMap.updateWindowSize(windowWidth, windowHeight);
+						playerCamera.updateSize(window.getSize().x, window.getSize().y, 604.8f / window.getSize().y);
+						miniMap.updateWindowSize(window.getSize().x, window.getSize().y);
 					}
 					else if (action == "MAIN MENU") {
 						currentGameState = GameState::Menu;

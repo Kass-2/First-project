@@ -12,6 +12,9 @@
 #include <SFML/Graphics/Sprite.hpp>
 
 #include "Player.h"
+#include "MapData.h"
+
+
 
 Player::Player(sf::Texture &texture, sf::Sprite &sprite, const std::string& tf, int frameWidth, int frameHeight)
 	: playerFrames({0.3f, 8, 0, -1}), rows ({0, 0, 0, 0})
@@ -66,11 +69,15 @@ Player::Player(sf::Texture &texture, sf::Sprite &sprite, const std::string& tf, 
 	animationClock.restart();
 }
 
+
+
 void Player::setPlayerPosition(sf::Sprite& sprite, float x, float y) {
 	// Si le mouvement du joueur est verrouillé, on ne change pas sa position
 	if (lock) return;
 	sprite.setPosition({ x, y });
 }
+
+
 
 void Player::resetInputs() {
 	// Reset key held flags
@@ -79,6 +86,8 @@ void Player::resetInputs() {
 	heldState.upHeld = false;
 	heldState.downHeld = false;
 }
+
+
 
 sf::FloatRect Player::getHitbox(const sf::Sprite& sprite) const {
 	// Custom hitbox dimensions (change this to fit your sprite)
@@ -95,26 +104,77 @@ sf::FloatRect Player::getHitbox(const sf::Sprite& sprite) const {
 	);
 }
 
+
+
 void Player::initialState(std::string characterName) {
 	player.name = characterName;
 	player.health = 100;
 	player.maxHealth = 100;
 	player.attackPower = 10;
 	player.defense = 5;
-	player.speed = (1.25f * 60);
+	player.speed = (1.f * 60);
+	player.stamina = 100;
+	player.dashDistance = 2;
+	player.dashCooldown = 1.f;
 }
+
+
 
 float Player::getHealth() const {
 	return player.health;
 }
 
+
+
 float Player::getMaxHealth() const {
 	return player.maxHealth;
 }
 
+
+
 void Player::handleInput(sf::Sprite& sprite, float dt) {
 	// Si le mouvement du joueur est verrouillé ou s'il est mort, on ne gère pas les entrées clavier
 	if (lock || playerState.dead || playerState.damaged || playerState.healing) return;
+
+	// Vérifie le cooldown avant de permettre au joueur de dash
+	if (playerState.dash) {
+		if (playerState.state != PlayerState::DASHING && 
+			dashCooldownClock.getElapsedTime().asSeconds() >= player.dashCooldown) {
+			playerState.state = PlayerState::DASHING;
+			dashCooldownClock.restart();
+			PlayerFrameAnimation();
+		}
+		playerState.dash = false;
+	}
+
+	// Mouvement de dash du joueur
+	if (playerState.state == PlayerState::DASHING) {
+		//PlayerFrameAnimation();
+
+		sf::Vector2f dashDirection = { 0.f, 0.f };
+
+		switch (DInfo.direction) {
+		case Direction::LEFT:
+			dashDirection = { -1.f, 0.f };
+			break;
+		case Direction::RIGHT:
+			dashDirection = { 1.f, 0.f };
+			break;
+		case Direction::UP:
+			dashDirection = { 0.f, -1.f };
+			break;
+		case Direction::DOWN:
+			dashDirection = { 0.f, 1.f };
+			break;
+		}
+		// Temps de l'animation de dash
+		float totalDashTime = playerFrames.mf * playerFrames.ft;
+		if (totalDashTime > 0.f) {
+			float dashSpeed = player.dashDistance * TILE_SIZE / totalDashTime;
+			sprite.move(dashDirection * dashSpeed * dt);
+		}
+		return;
+	}
 
 	// Vecteur de mouvement du joueur en fonction des entrées clavier
 	sf::Vector2f movement = { 0.f, 0.f };
@@ -140,13 +200,15 @@ void Player::handleInput(sf::Sprite& sprite, float dt) {
 	AInfo.attackPressed = false; // Réinitialiser l'état d'attaque après la gestion des entrées clavier
 }
 
+
+
 void Player::update(float dt, const sf::RenderWindow& window, sf::Sprite& sprite) {
 	// Gestion des entrées clavier pour déplacer le joueur et changer son état
 	handleInput(sprite, dt);
 
 	// Empêcher le personnage de sortir de la fenêtre de jeu
 	sf::Vector2f pos = sprite.getPosition();
-	sf::Vector2u size = window.getSize();
+	sf::Vector2u size = { MAP_WIDTH * TILE_SIZE, MAP_HEIGHT * TILE_SIZE };
 
 	// Calculer les limites du sprite pour éviter que le personnage ne sorte de la fenêtre
 	float halfX = fL / 5.f;
@@ -166,6 +228,8 @@ void Player::update(float dt, const sf::RenderWindow& window, sf::Sprite& sprite
 	// Mise à jour de l'animation du joueur en fonction de son état et de sa direction
 	updateAnimation(dt, sprite);
 }
+
+
 
 void Player::updateAnimation(float deltaTime, sf::Sprite& sprite) {
 	// Variable pour l'animation du joueur : on utilise la largeur et la hauteur d'une frame pour calculer les positions dans la texture
@@ -265,6 +329,16 @@ void Player::updateAnimation(float deltaTime, sf::Sprite& sprite) {
 				// Revenir à l'état idle après l'animation d'attaque
 				playerState.state = PlayerState::IDLE;
 			}
+			else if (playerState.state == PlayerState::DASHING)
+			{
+				// Réinitialiser l'état d'attaque après l'animation
+				playerState.dash = false;
+
+				rectSource.position.x = 0;
+
+				// Revenir à l'état idle après l'animation d'attaque
+				playerState.state = PlayerState::IDLE;
+			}
 			else if (playerState.state == PlayerState::HEALING)
 			{
 				// Réinitialiser l'état de soin après l'animation
@@ -286,11 +360,17 @@ void Player::updateAnimation(float deltaTime, sf::Sprite& sprite) {
 	playerFrames.pf = playerFrames.cf;
 }
 
+
+
 void Player::PlayerFrameAnimation() {
 	switch (playerState.state) {
+		case PlayerState::DASHING:
+			// Animation pour l'état de dashing
+			StateFrameTime(0.03f, 7);
+			break;
 		case PlayerState::RUNNING:
 			// Animation pour l'état de course
-			StateFrameTime(0.05, 8);
+			StateFrameTime(0.06, 8);
 			break;
 		case PlayerState::WALKING:
 			// Animation pour l'état de marche
@@ -319,6 +399,8 @@ void Player::PlayerFrameAnimation() {
 	}
 }
 
+
+
 void Player::StateFrameTime(const float frameTime, const int maxFrames)
 {
 	// Déterminer le temps entre les frames et le nombre de frames en fonction de l'état du joueur
@@ -326,6 +408,8 @@ void Player::StateFrameTime(const float frameTime, const int maxFrames)
 	playerFrames.mf = maxFrames;
 	
 }
+
+
 
 void Player::currentLineTexture(int& targetRow) const
 {
@@ -335,6 +419,8 @@ void Player::currentLineTexture(int& targetRow) const
 		targetRow = rows.walkingRow;
 	else if (playerState.state == PlayerState::RUNNING)
 		targetRow = rows.runningRow;
+	else if (playerState.state == PlayerState::DASHING)
+		targetRow = rows.dashRow;
 	else if (playerState.state == PlayerState::ATTACKING)
 		targetRow = rows.attackingRow;
 	else if (playerState.state == PlayerState::DAMAGED)
@@ -345,15 +431,23 @@ void Player::currentLineTexture(int& targetRow) const
 		targetRow = rows.healingRow;
 }
 
+
+
 void Player::handlePlayerState(PlayerStates& playerState, AttackInfo& AInfo) const {
 	if (playerState.dead) playerState.state = PlayerState::DEAD;
 	else if (playerState.damaged) playerState.state = PlayerState::DAMAGED;
 	else if (playerState.healing) playerState.state = PlayerState::HEALING;
 	else if (AInfo.attacking) playerState.state = PlayerState::ATTACKING;
+
+	else if (playerState.state == PlayerState::DASHING);
+
+	else if (playerState.dash) playerState.state = PlayerState::DASHING;
 	else if (playerState.run) playerState.state = PlayerState::RUNNING;
 	else if (playerState.walk) playerState.state = PlayerState::WALKING;
 	else playerState.state = PlayerState::IDLE;
 }
+
+
 
 void Player::handleRows(DirectionInfo& DInfo, SpriteRows& rows) const {
 	// Les lignes pour l'état d'attaque sont différentes pour chaque direction
@@ -374,6 +468,12 @@ void Player::handleRows(DirectionInfo& DInfo, SpriteRows& rows) const {
 		DInfo.direction == Direction::UP ? 30 :
 		DInfo.direction == Direction::LEFT ? 32 :
 		DInfo.direction == Direction::RIGHT ? 31 : 29;
+	// Les lignes pour l'état de dash sont différentes pour chaque direction
+	rows.dashRow =
+		DInfo.direction == Direction::DOWN ? 9 :
+		DInfo.direction == Direction::UP ? 10 :
+		DInfo.direction == Direction::LEFT ? 12 :
+		DInfo.direction == Direction::RIGHT ? 11 : 9;
 	// Les lignes pour l'état idle sont différentes pour chaque direction
 	rows.idleRow =
 		DInfo.direction == Direction::DOWN ? 25 :
@@ -409,6 +509,8 @@ void Player::handleRows(DirectionInfo& DInfo, SpriteRows& rows) const {
 		rows.walkingRow -= 1;
 	if (rows.runningRow > 0)
 		rows.runningRow -= 1;
+	if (rows.dashRow > 0)
+		rows.dashRow -= 1;
 	if (rows.idleRow > 0)
 		rows.idleRow -= 1;
 	if (rows.damagedRow > 0)
@@ -418,6 +520,8 @@ void Player::handleRows(DirectionInfo& DInfo, SpriteRows& rows) const {
 	if (rows.healingRow > 0)
 		rows.healingRow -= 1;
 }
+
+
 
 void Player::resetPlayer(bool animationChanged, sf::Sprite& sprite, SpriteRows rows, Animations reset) {
 	// Si l'état du joueur a changé, on réinitialise l'animation
@@ -433,6 +537,8 @@ void Player::resetPlayer(bool animationChanged, sf::Sprite& sprite, SpriteRows r
 			reset.resetAnimation(rectSource, rows.walkingRow);
 		else if (playerState.state == PlayerState::RUNNING)
 			reset.resetAnimation(rectSource, rows.runningRow);
+		else if (playerState.state == PlayerState::DASHING)
+			reset.resetAnimation(rectSource, rows.dashRow);
 		else if (playerState.state == PlayerState::HEALING) 
 		{
 			// Réinitialiser l'animation de soin et augmenter la santé du joueur
@@ -467,6 +573,8 @@ void Player::resetPlayer(bool animationChanged, sf::Sprite& sprite, SpriteRows r
 	}
 }
 
+
+
 void Player::handleEvent(const sf::Event& event)
 {
 	// Si le mouvement du joueur est verrouillé, on ne gère pas les événements clavier
@@ -475,10 +583,14 @@ void Player::handleEvent(const sf::Event& event)
 	inputManager.handleEvent(event, heldState, DInfo, AInfo, playerState, inventory);
 }
 
+
+
 sf::Vector2f Player::getPosition(const sf::Sprite& sprite) const
 {
 	return sprite.getPosition();
 }
+
+
 
 void Player::draw(sf::RenderWindow& window, sf::Sprite& sprite) {
 	window.draw(sprite);

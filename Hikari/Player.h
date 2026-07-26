@@ -27,6 +27,7 @@
 
 #include "PlayerData.h"
 #include "Animations.h"
+#include "InputManager.h"
 
 //=========================================================
 // Classe Player qui hérite de Entity et qui gère les mouvements, les animations et les états du joueur.
@@ -161,6 +162,9 @@ private:
 	sf::IntRect rectSource;
 	// Horloge pour gérer le temps entre les frames d'animation
 	sf::Clock animationClock;
+
+	// Horloge pour le temps de cooldown du dash
+	sf::Clock dashCooldownClock;
 
 	// Structure pour stocker les différents états du joueur sous forme de booléens
 	PlayerStates playerState;

@@ -27,6 +27,7 @@ enum class PlayerState
 	IDLE,
 	WALKING,
 	RUNNING,
+	DASHING,
 	ATTACKING,
 	HEALING
 };
@@ -57,6 +58,7 @@ struct PlayerStates
 	bool walk = false;
 	bool idle = false;
 	bool run = false;
+	bool dash = false;
 	bool attack = false;
 	bool healing = false;
 
@@ -75,6 +77,9 @@ struct PlayerInfo
 	float attackPower = 0;
 	float defense = 0;
 	float speed = 0;
+	float stamina = 0;
+	float dashDistance = 0;
+	float dashCooldown = 0;
 };
 
 // Structure pour stocker les informations d'animation du joueur
@@ -137,6 +142,7 @@ struct SpriteRows
 	int idleRow;
 	int walkingRow;
 	int runningRow;
+	int dashRow;
 	int attackingRow;
 	int damagedRow;
 	int deadRow;

@@ -39,10 +39,6 @@ Menu::Menu(const std::string& fontPath, const std::string& title, int titleSize,
 		std::cerr << "Erreur lors du chargement de la police: " << fontPath << std::endl;
 	}
 
-	/*float titleRatioX = titleSize / windowWidth;
-	float titleRatioY = titleSize / windowHeight;
-	float titleRatio = (titleRatioX + titleRatioY) / 2;*/
-
 	menuRatios.titleSizeRatio = titleSize;
 	menuRatios.positionRatioX = positionRatioX;
 	menuRatios.positionRatioY = positionRatioY;

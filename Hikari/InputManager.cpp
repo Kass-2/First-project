@@ -8,8 +8,12 @@
 //===============================
 // Inclusion des bibliothèques nécessaires
 //===============================
-#include "InputManager.h"
 #include <SFML/Graphics/Sprite.hpp>
+#include <SFML/Window/Keyboard.hpp>
+
+#include "InputManager.h"
+
+
 
 sf::Vector2f InputManager::handleMovement(
 	sf::Sprite& sprite, 
@@ -118,7 +122,7 @@ sf::Vector2f InputManager::handleMovement(
 
 	// Si le joueur est en train d'attaquer, on réduit sa vitesse de déplacement
 	if (AInfo.attacking) player.speed *= 0.25f;
-	else player.speed = playerState.run ? (3.f * 60) : (1.25f * 60);
+	else player.speed = playerState.run ? (2.f * 60) : (1.f * 60);
 
 	// Normaliser le vecteur de mouvement pour éviter que le personnage ne se déplace plus vite en diagonale
 	if (movement.x != 0.f || movement.y != 0.f)
@@ -137,6 +141,8 @@ sf::Vector2f InputManager::handleMovement(
 	
 	return movement;
 }
+
+
 
 void InputManager::handleEvent(const sf::Event& event, 
 	HeldDirection& heldState, 
@@ -176,7 +182,13 @@ void InputManager::handleEvent(const sf::Event& event,
 			DInfo.lastVertical = Direction::DOWN;
 			lastPressedAxis = Axis::VERTICAL;
 			break;
+		case sf::Keyboard::Key::Space:
+			if (playerState.state != PlayerState::DASHING) {
+				playerState.dash = true;
+			}
+			break;
 		}
+		
 	}
 
 	if (const auto* keyReleased = event.getIf<sf::Event::KeyReleased>())
@@ -207,8 +219,7 @@ void InputManager::handleEvent(const sf::Event& event,
 		case sf::Keyboard::Key::LShift:
 			playerState.run = !playerState.run;
 			break;
-			// Touches d'attaque (espace ou entrée)
-		case sf::Keyboard::Key::Space:
+			// Touches d'attaque (entrée)
 		case sf::Keyboard::Key::Enter:
 			AInfo.attackPressed = true;
 			break;
