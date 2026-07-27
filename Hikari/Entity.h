@@ -7,7 +7,11 @@
 ///////////////////////////////////////////////////////////////
 
 #pragma once
-#include <SFML/Graphics.hpp>
+#include <SFML/Graphics/RenderWindow.hpp>
+#include <SFML/Graphics/Sprite.hpp>
+#include <SFML/Graphics/Texture.hpp>
+#include <SFML/Graphics/Transformable.hpp>
+#include <SFML/System/Vector2.hpp>
 
 //===============================
 // Classe Entity qui sert de base pour toutes les entités du jeu (joueur, ennemis, objets, etc.)
@@ -23,6 +27,14 @@ public:
 
 	sf::Vector2f getPosition() const { return sprite.getPosition(); }
 	void setPosition(const sf::Vector2f& pos) { sprite.setPosition(pos); }
+
+	sf::Sprite& getSprite() {
+		return sprite;
+	}
+
+	const sf::Sprite& getSprite() const {
+		return sprite;
+	}
 
 protected:
 	sf::Sprite sprite;

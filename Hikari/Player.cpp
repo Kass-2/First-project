@@ -16,14 +16,10 @@
 
 
 
-Player::Player(sf::Texture &texture, sf::Sprite &sprite, const std::string& tf, int frameWidth, int frameHeight)
-	: playerFrames({0.3f, 8, 0, -1}), rows ({0, 0, 0, 0})
+Player::Player(const std::string& tf, int frameWidth, int frameHeight)
+	: playerFrames({ 0.3f, 8, 0, -1 }), rows({ 0 }), 
+	textureFile(tf), fL(frameWidth), fH(frameHeight)
 {
-	textureFile = tf;
-	fL = frameWidth;
-	fH = frameHeight;
-	playerFrames.cf = 0;
-
 	// Chargement de la texture du joueur
 	if (!texture.loadFromFile(textureFile))
 	{
@@ -71,7 +67,7 @@ Player::Player(sf::Texture &texture, sf::Sprite &sprite, const std::string& tf, 
 
 
 
-void Player::setPlayerPosition(sf::Sprite& sprite, float x, float y) {
+void Player::setPlayerPosition(float x, float y) {
 	// Si le mouvement du joueur est verrouillé, on ne change pas sa position
 	if (lock) return;
 	sprite.setPosition({ x, y });
@@ -89,8 +85,8 @@ void Player::resetInputs() {
 
 
 
-sf::FloatRect Player::getHitbox(const sf::Sprite& sprite) const {
-	// Custom hitbox dimensions (change this to fit your sprite)
+sf::FloatRect Player::getHitbox() const {
+	// Custom hitbox dimensions
 	float width = 16.f;
 	float height = 24.f;
 
@@ -132,7 +128,7 @@ float Player::getMaxHealth() const {
 
 
 
-void Player::handleInput(sf::Sprite& sprite, float dt) {
+void Player::handleInput(float dt) {
 	// Si le mouvement du joueur est verrouillé ou s'il est mort, on ne gère pas les entrées clavier
 	if (lock || playerState.dead || playerState.damaged || playerState.healing) return;
 
@@ -202,9 +198,9 @@ void Player::handleInput(sf::Sprite& sprite, float dt) {
 
 
 
-void Player::update(float dt, const sf::RenderWindow& window, sf::Sprite& sprite) {
+void Player::update(float dt, const sf::RenderWindow& window) {
 	// Gestion des entrées clavier pour déplacer le joueur et changer son état
-	handleInput(sprite, dt);
+	handleInput(dt);
 
 	// Empêcher le personnage de sortir de la fenêtre de jeu
 	sf::Vector2f pos = sprite.getPosition();
@@ -226,12 +222,12 @@ void Player::update(float dt, const sf::RenderWindow& window, sf::Sprite& sprite
 	if (!lock) handlePlayerState(playerState, AInfo);
 
 	// Mise à jour de l'animation du joueur en fonction de son état et de sa direction
-	updateAnimation(dt, sprite);
+	updateAnimation(dt);
 }
 
 
 
-void Player::updateAnimation(float deltaTime, sf::Sprite& sprite) {
+void Player::updateAnimation(float deltaTime) {
 	// Variable pour l'animation du joueur : on utilise la largeur et la hauteur d'une frame pour calculer les positions dans la texture
 	Animations playerAnimation(fH, fL);
 
@@ -251,7 +247,7 @@ void Player::updateAnimation(float deltaTime, sf::Sprite& sprite) {
 		|| rowChanged;
 
 	// Déterminer la ligne de la texture à utiliser en fonction de l'état du joueur
-	resetPlayer(animationChanged, sprite, rows, playerAnimation);
+	resetPlayer(animationChanged, rows, playerAnimation);
 
 	// Mettre à jour les frames de l'animation du joueur en fonction de son état
 	PlayerFrameAnimation();
@@ -523,7 +519,7 @@ void Player::handleRows(DirectionInfo& DInfo, SpriteRows& rows) const {
 
 
 
-void Player::resetPlayer(bool animationChanged, sf::Sprite& sprite, SpriteRows rows, Animations reset) {
+void Player::resetPlayer(bool animationChanged, SpriteRows rows, Animations reset) {
 	// Si l'état du joueur a changé, on réinitialise l'animation
 	if (animationChanged)
 	{
@@ -585,13 +581,13 @@ void Player::handleEvent(const sf::Event& event)
 
 
 
-sf::Vector2f Player::getPosition(const sf::Sprite& sprite) const
-{
-	return sprite.getPosition();
-}
+//sf::Vector2f Player::getPosition(const sf::Sprite& sprite) const
+//{
+//	return sprite.getPosition();
+//}
 
 
 
-void Player::draw(sf::RenderWindow& window, sf::Sprite& sprite) {
+void Player::draw(sf::RenderWindow& window) {
 	window.draw(sprite);
 }
