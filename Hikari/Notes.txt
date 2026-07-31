@@ -1,4 +1,6 @@
 ### What I need to do in the game (Ideas and tasks)
+- Refactor my code
+
 - (DONE, for now. Still need to upscale the healthBar) Continue the menu implimentation. (Had the other button and functionality of the menu and pause menu)
 
 - I need to change my map to be able to go fullscreen and also impliment the code for a bigger map.

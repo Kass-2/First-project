@@ -134,7 +134,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Animations.cpp" />
+    <ClCompile Include="Animator.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="Functions.cpp" />
     <ClCompile Include="HealthBar.cpp" />
@@ -148,7 +148,8 @@
     <ClCompile Include="TileMap.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Animations.h" />
+    <ClInclude Include="Animator.h" />
+    <ClInclude Include="EntityData.h" />
     <ClInclude Include="Functions.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Entity.h" />
@@ -160,7 +161,6 @@
     <ClInclude Include="Menu.h" />
     <ClInclude Include="MiniMap.h" />
     <ClInclude Include="Player.h" />
-    <ClInclude Include="PlayerData.h" />
     <ClInclude Include="TileMap.h" />
   </ItemGroup>
   <ItemGroup>

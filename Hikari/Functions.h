@@ -23,7 +23,7 @@
 // Description:
 // La taille est basé sur une ancienne taille de fenêtre et une taille précédente
 //==============================
-int calculateSize(int baseSize, int baseWindowWidth, 
+int calculateSize(float baseSize, int baseWindowWidth,
 	int baseWindowHeight, int currentWindowWidth, int currentWindowHeight);
 
 //==============================

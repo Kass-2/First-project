@@ -35,8 +35,7 @@ public:
 	// Dessin de la mini-carte à l'écran
 	//===============================
 	void draw(sf::RenderWindow& window, const TileMap& tileMap,
-		const Player& player, const sf::Sprite& playerSprite,
-		const Player& testChar, const sf::Sprite& testSprite);
+		const Player& player, const Player& testChar);
 
 private:
 	sf::View view;					// Vue pour la mini-carte

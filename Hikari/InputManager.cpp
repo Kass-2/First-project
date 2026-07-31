@@ -10,8 +10,10 @@
 //===============================
 #include <SFML/Graphics/Sprite.hpp>
 #include <SFML/Window/Keyboard.hpp>
+#include <SFML/System/Vector2.hpp>
 
 #include "InputManager.h"
+#include "entity.h"
 
 
 
@@ -20,8 +22,8 @@ sf::Vector2f InputManager::handleMovement(
 	PlayerStates& playerState, 
 	PlayerInfo& player, 
 	HeldDirection& heldState, 
-	DirectionInfo& DInfo, 
-	AttackInfo& AInfo)
+	DirectionInfo& directionInfo, 
+	AttackInfo& AInfo) const
 {	
 	// Vecteur de mouvement du joueur en fonction des entrées clavier
 	sf::Vector2f movement = { 0.f, 0.f };
@@ -29,51 +31,51 @@ sf::Vector2f InputManager::handleMovement(
 	// Mémoriser les états des touches pour gérer les cas où les deux touches sont pressées en même temps
 	if (heldState.leftHeld && heldState.rightHeld)
 	{
-		if (DInfo.lastHorizontal == Direction::LEFT)
+		if (directionInfo.lastHorizontal == Direction::LEFT)
 		{
 			movement.x = -1.f;
-			DInfo.direction = Direction::LEFT;
+			directionInfo.direction = Direction::LEFT;
 		}
 		else
 		{
 			movement.x = 1.f;
-			DInfo.direction = Direction::RIGHT;
+			directionInfo.direction = Direction::RIGHT;
 		}
 	}
 	else if (heldState.leftHeld)
 	{
 		movement.x = -1.f;
-		DInfo.direction = Direction::LEFT;
+		directionInfo.direction = Direction::LEFT;
 	}
 	else if (heldState.rightHeld)
 	{
 		movement.x = 1.f;
-		DInfo.direction = Direction::RIGHT;
+		directionInfo.direction = Direction::RIGHT;
 	}
 
 	// Mémoriser la dernière direction horizontale pour gérer les cas où les deux touches sont pressées en même temps
 	if (heldState.upHeld && heldState.downHeld)
 	{
-		if (DInfo.lastVertical == Direction::UP)
+		if (directionInfo.lastVertical == Direction::UP)
 		{
 			movement.y = -1.f;
-			DInfo.direction = Direction::UP;
+			directionInfo.direction = Direction::UP;
 		}
 		else
 		{
 			movement.y = 1.f;
-			DInfo.direction = Direction::DOWN;
+			directionInfo.direction = Direction::DOWN;
 		}
 	}
 	else if (heldState.upHeld)
 	{
 		movement.y = -1.f;
-		DInfo.direction = Direction::UP;
+		directionInfo.direction = Direction::UP;
 	}
 	else if (heldState.downHeld)
 	{
 		movement.y = 1.f;
-		DInfo.direction = Direction::DOWN;
+		directionInfo.direction = Direction::DOWN;
 	}
 
 	bool isMovingHorizontal = heldState.leftHeld || heldState.rightHeld;
@@ -86,12 +88,12 @@ sf::Vector2f InputManager::handleMovement(
 			// Horizontal was pressed last, so vertical was pressed first. Face vertical.
 			if (heldState.upHeld && heldState.downHeld)
 			{
-				DInfo.direction = (DInfo.lastVertical == Direction::UP) ?
+				directionInfo.direction = (directionInfo.lastVertical == Direction::UP) ?
 					Direction::UP : Direction::DOWN;
 			}
 			else
 			{
-				DInfo.direction = heldState.upHeld ? Direction::UP :
+				directionInfo.direction = heldState.upHeld ? Direction::UP :
 					Direction::DOWN;
 			}
 		}
@@ -100,13 +102,13 @@ sf::Vector2f InputManager::handleMovement(
 			// Vertical was pressed last, so horizontal was pressed first. Face horizontal.
 			if (heldState.leftHeld && heldState.rightHeld)
 			{
-				DInfo.direction = (DInfo.lastHorizontal ==
+				directionInfo.direction = (directionInfo.lastHorizontal ==
 					Direction::LEFT) ?
 					Direction::LEFT : Direction::RIGHT;
 			}
 			else
 			{
-				DInfo.direction = heldState.leftHeld ? Direction::LEFT :
+				directionInfo.direction = heldState.leftHeld ? Direction::LEFT :
 					Direction::RIGHT;
 			}
 		}
@@ -114,15 +116,17 @@ sf::Vector2f InputManager::handleMovement(
 
 	bool moving = (movement.x != 0.f || movement.y != 0.f);
 
+	playerState.jog = moving && (playerState.run == false) && (playerState.walk == false);
+
 	playerState.run = moving && playerState.run;
 
-	playerState.walk = moving && (playerState.run == false);
+	playerState.walk = moving && playerState.walk;
 
 	playerState.idle = !moving && !AInfo.attacking;
 
 	// Si le joueur est en train d'attaquer, on réduit sa vitesse de déplacement
 	if (AInfo.attacking) player.speed *= 0.25f;
-	else player.speed = playerState.run ? (2.f * 60) : (1.f * 60);
+	else player.speed = playerState.run ? (3.f * 60) : (1.9f * 60);
 
 	// Normaliser le vecteur de mouvement pour éviter que le personnage ne se déplace plus vite en diagonale
 	if (movement.x != 0.f || movement.y != 0.f)
@@ -146,7 +150,7 @@ sf::Vector2f InputManager::handleMovement(
 
 void InputManager::handleEvent(const sf::Event& event, 
 	HeldDirection& heldState, 
-	DirectionInfo& DInfo, 
+	DirectionInfo& directionInfo, 
 	AttackInfo& AInfo, 
 	PlayerStates& playerState, 
 	bool& inventory)
@@ -158,34 +162,32 @@ void InputManager::handleEvent(const sf::Event& event,
 		case sf::Keyboard::Key::A:
 		case sf::Keyboard::Key::Left:
 			heldState.leftHeld = true;
-			DInfo.lastHorizontal = Direction::LEFT;
+			directionInfo.lastHorizontal = Direction::LEFT;
 			lastPressedAxis = Axis::HORIZONTAL;
 			break;
 
 		case sf::Keyboard::Key::D:
 		case sf::Keyboard::Key::Right:
 			heldState.rightHeld = true;
-			DInfo.lastHorizontal = Direction::RIGHT;
+			directionInfo.lastHorizontal = Direction::RIGHT;
 			lastPressedAxis = Axis::HORIZONTAL;
 			break;
 
 		case sf::Keyboard::Key::W:
 		case sf::Keyboard::Key::Up:
 			heldState.upHeld = true;
-			DInfo.lastVertical = Direction::UP;
+			directionInfo.lastVertical = Direction::UP;
 			lastPressedAxis = Axis::VERTICAL;
 			break;
 
 		case sf::Keyboard::Key::S:
 		case sf::Keyboard::Key::Down:
 			heldState.downHeld = true;
-			DInfo.lastVertical = Direction::DOWN;
+			directionInfo.lastVertical = Direction::DOWN;
 			lastPressedAxis = Axis::VERTICAL;
 			break;
 		case sf::Keyboard::Key::Space:
-			if (playerState.state != PlayerState::DASHING) {
-				playerState.dash = true;
-			}
+			playerState.dash = true;
 			break;
 		}
 		
@@ -214,6 +216,10 @@ void InputManager::handleEvent(const sf::Event& event,
 		case sf::Keyboard::Key::S:
 		case sf::Keyboard::Key::Down:
 			heldState.downHeld = false;
+			break;
+			// Si le joueur est en train de courir, on le fait marcher, sinon on le fait courir
+		case sf::Keyboard::Key::LControl:
+			playerState.walk = !playerState.walk;
 			break;
 			// Si le joueur est en train de courir, on le fait marcher, sinon on le fait courir
 		case sf::Keyboard::Key::LShift:

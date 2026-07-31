@@ -35,12 +35,12 @@ public:
 	//===============================
 	// Mise à jour de la caméra (Clamping)
 	//===============================
-	void clamped(const Player& player, const sf::Sprite& sprite);
+	void clamped(const Player& player);
 
 	//===============================
 	// Mettre à jour la position de la caméra pour suivre le joueur
 	//===============================
-	void follow(const Player& player, const sf::Sprite& sprite);
+	void follow(const Player& player);
 
 	//===============================
 	// Appliquer la vue de la caméra à la fenêtre

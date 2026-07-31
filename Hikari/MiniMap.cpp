@@ -85,8 +85,7 @@ void MiniMap::handleEvent(const sf::Event & event) {
 }
 
 void MiniMap::draw(sf::RenderWindow & window, const TileMap & tileMap, 
-    const Player & player, const sf::Sprite & playerSprite, 
-    const Player & testChar, const sf::Sprite & testSprite) 
+    const Player & player, const Player & testChar) 
 {
     if (!miniMapVisible) return;
 
@@ -102,10 +101,10 @@ void MiniMap::draw(sf::RenderWindow & window, const TileMap & tileMap,
     window.draw(tileMap);
 
     // Mettre à jour les positions et dessiner les indicateurs
-    playerDot.setPosition(player.getPosition(playerSprite));
+    playerDot.setPosition(player.getPosition());
     window.draw(playerDot);
 
-    testCharDot.setPosition(testChar.getPosition(testSprite));
+    testCharDot.setPosition(testChar.getPosition());
     window.draw(testCharDot);
 
 	// Dessiner la bordure de la mini-carte (UI)

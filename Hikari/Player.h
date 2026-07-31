@@ -22,154 +22,20 @@
 //===============================
 // Inclusion des bibliothèques
 //===============================
-#include <SFML/Graphics/Texture.hpp>
-#include <SFML/Graphics/Sprite.hpp>
+#include <vector>
+
 #include <SFML/Graphics/Rect.hpp>
 #include <SFML/Graphics/RenderWindow.hpp>
+#include <SFML/System/Clock.hpp>
+#include <SFML/System/Vector2.hpp>
+#include <SFML/Graphics/Sprite.hpp>
+#include <SFML/Graphics/Texture.hpp>
 
-//#include "PlayerData.h"
-#include "Animations.h"
+#include "Animator.h"
 #include "InputManager.h"
 #include "Entity.h"
 
-// Enumération pour les différentes directions du joueur
-enum class Direction
-{
-	UP,
-	DOWN,
-	LEFT,
-	RIGHT
-};
 
-// Enumération pour les différents états du joueur
-enum class PlayerState
-{
-	DAMAGED,
-	DEAD,
-	IDLE,
-	WALKING,
-	RUNNING,
-	DASHING,
-	ATTACKING,
-	HEALING
-};
-
-// Enumération pour les différentes entrées clavier
-enum class KeyState
-{
-	PRESSED,
-	RELEASED
-};
-
-// Enumération pour les différentes touches du clavier
-enum class Keys
-{
-	UP,
-	DOWN,
-	LEFT,
-	RIGHT,
-	SHIFT
-};
-
-// Structure pour stocker les différents états du joueur sous forme de booléens
-struct PlayerStates
-{
-	bool damaged = false;
-	bool dead = false;
-	bool revived = false;
-	bool walk = false;
-	bool idle = false;
-	bool run = false;
-	bool dash = false;
-	bool attack = false;
-	bool healing = false;
-
-	// État actuel du joueur
-	PlayerState state = PlayerState::IDLE;
-	// État précédent du joueur pour gérer les transitions d'animation
-	PlayerState previousState = PlayerState::IDLE;
-};
-
-// Structure pour stocker les informations du joueur
-struct PlayerInfo
-{
-	std::string name = "";
-	float health = 0;
-	float maxHealth = 0;
-	float attackPower = 0;
-	float defense = 0;
-	float speed = 0;
-	float stamina = 0;
-	float dashDistance = 0;
-	float dashCooldown = 0;
-};
-
-// Structure pour stocker les informations d'animation du joueur
-struct PFrames
-{
-	// FrameTime : Temps écoulé depuis la dernière mise à jour de l'animation
-	float ft;
-	// MaxFrames : Nombre de frames d'animation pour chaque état du joueur
-	int mf;
-	// CurrentFrame : Frame actuelle de l'animation du joueur
-	int cf;
-	// PreviousFrame : Frame précédente de l'animation du joueur
-	int pf;
-};
-
-// Structure pour stocker les différentes directions du joueur
-struct DirectionInfo
-{
-	// Direction actuelle du joueur
-	Direction direction = Direction::DOWN;
-	// Direction précédente du joueur pour gérer les transitions d'animation
-	Direction previousDirection = Direction::DOWN;
-	// Mémoriser la dernière direction horizontale du joueur
-	Direction lastHorizontal = Direction::RIGHT;
-	// Mémoriser la dernière direction verticale du joueur
-	Direction lastVertical = Direction::DOWN;
-};
-
-// Structure pour stocker les différentes directions du joueur sous forme de booléens
-struct HeldDirection
-{
-	// Booléens pour gérer le déplacement à gauche
-	bool leftHeld = false;
-	// Booléens pour gérer le déplacement à droite
-	bool rightHeld = false;
-	// Booléens pour gérer le déplacement en haut
-	bool upHeld = false;
-	// Booléens pour gérer le déplacement en bas
-	bool downHeld = false;
-};
-
-struct AttackInfo
-{
-	// Horloge pour gérer le temps entre les attaques du joueur
-	sf::Clock attackCooldown;
-	// Temps de cooldown entre les attaques du joueur
-	float attackCooldownTime = 0.25f;
-	// Vecteur de déplacement du joueur en fonction des entrées clavier
-	sf::Vector2f attackVelocity = { 0.f, 0.f };
-	// Direction de l'attaque du joueur
-	Direction attackDirection = Direction::RIGHT;
-	// Booléen pour gérer l'attaque du joueur
-	bool attackPressed = false;
-	// Booléen pour savoir si le joueur est en train d'attaquer
-	bool attacking = false;
-};
-
-struct SpriteRows
-{
-	int idleRow;
-	int walkingRow;
-	int runningRow;
-	int dashRow;
-	int attackingRow;
-	int damagedRow;
-	int deadRow;
-	int healingRow;
-};
 
 //=========================================================
 // Classe Player qui hérite de Entity et qui gère les mouvements, les animations et les états du joueur.
@@ -215,15 +81,19 @@ public:
 	float getMaxHealth() const;
 
 	//===============================
+	// Fonction pour que le personnage prenne des dégats
+	//===============================
+	void takeDamage(float amount);
+
+	//===============================
+	// Fonction pour que le personnage prenne des vies
+	//===============================
+	void useHeal(float amount);
+
+	//===============================
 	// Gestion des événements clavier pour mettre à jour les booléens correspondants aux touches pressées ou relâchées
 	//===============================
 	void handleEvent(const sf::Event& event);
-
-	// ENLEVER
-	//===============================
-	// Getter pour la position du joueur
-	//===============================
-	//sf::Vector2f getPosition(const sf::Sprite& sprite) const;
 
 	//===============================
 	// Affichage du sprite du joueur à l'écran
@@ -257,37 +127,22 @@ private:
 	void updateAnimation(float deltaTime);
 
 	//===============================
-	// Gestion des frames de l'animation du joueur en fonction de son état
+	// Fonction pour la mecanique de dash
 	//===============================
-	void PlayerFrameAnimation();
+	bool dashMechanic(float dt);
 
 	//===============================
-	// Détermination du temps entre les frames et du nombre de frames en fonction de l'état du joueur
+	// Fonction pour les traces qui suivent le joueur lors d'un dash
 	//===============================
-	void StateFrameTime(const float frameTime, const int maxFrames);
-
-	//===============================
-	// Détermination de la ligne de la texture à utiliser en fonction de l'état du joueur
-	//===============================
-	void currentLineTexture(int& targetRow) const;
+	void ghostTrails(float dt);
 
 	//===============================
 	// Mise à jour de l'état du joueur en fonction des booléens
 	//===============================
 	void handlePlayerState(PlayerStates& playerState, AttackInfo& AInfo) const;
 
-	//===============================
-	// Mise à jour des lignes de la texture pour chaque état du joueur en fonction de la direction du joueur
-	//===============================
-	void handleRows(DirectionInfo& DInfo, SpriteRows& rows) const;
-
-	//===============================
-	// Fonction pour réinitialiser l'animation du joueur lorsque son état ou sa direction change
-	//===============================
-	void resetPlayer(bool animationChanged, SpriteRows rows, Animations reset);
-
-	// Informations d'animation du joueur
-	PFrames playerFrames;
+	// Permet l'animation du sprite du joueur
+	Animator animator;
 
 	// FrameLargeur : Largeur de la partie de la texture à afficher
 	int fL;
@@ -314,20 +169,38 @@ private:
 	// Informations sur le joueur
 	PlayerInfo player;
 
+	// Velocité du joueur pour gérer la vitesse de déplacement
+	sf::Vector2f velocity = { 0.f,0.f };
+
+	// Données pour les infos sur le dash
+	int dashChainCount = 0;
+	sf::Clock dashTimer;
+	sf::Clock exhaustionTimer;
+	bool chainDash = false;
+	sf::Vector2f dashDirection = { 0.f, 0.f };
+
+	// Ghost Trail (Afterimages) trackers
+	struct GhostTrail {
+		sf::Sprite sprite;
+		float lifetime = 0;
+		float maxLifetime = 0;
+
+		GhostTrail(sf::Texture t) : sprite(t) {};
+	};
+	std::vector<GhostTrail> ghosts;
+	sf::Clock ghostSpawnTimer;
+
 	// Informations sur l'attaque du joueur
 	AttackInfo AInfo;
 
 	// Informations sur les directions maintenues
 	HeldDirection heldState;
 
-	// Informations sur les différentes lignes de la texture pour chaque état du joueur
-	SpriteRows rows;
-
 	// Booléen pour verrouiller le mouvement du joueur
 	bool lock = false;
 
 	// Informations sur les directions du joueur
-	DirectionInfo DInfo;
+	DirectionInfo directionInfo;
 
 	// Gestionnaire d'entrées clavier pour le joueur
 	InputManager inputManager;

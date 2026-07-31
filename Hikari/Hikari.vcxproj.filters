@@ -31,14 +31,17 @@
     <Filter Include="Header Files\Map">
       <UniqueIdentifier>{9e890db1-597d-4e4f-a47f-8c8977215cca}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\Player">
-      <UniqueIdentifier>{16367ae7-2030-4290-aaf9-44e26d12788f}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files\Game">
       <UniqueIdentifier>{c5513eee-4a60-47a4-a178-2072bc29b56f}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source Files\Game">
       <UniqueIdentifier>{dc4f8555-4dc0-494f-b613-3732bef57872}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Entities">
+      <UniqueIdentifier>{c50ce563-50c4-4b77-843c-7a5faad24004}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Entities\Player">
+      <UniqueIdentifier>{16367ae7-2030-4290-aaf9-44e26d12788f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -57,7 +60,7 @@
     <ClCompile Include="Player.cpp">
       <Filter>Source Files\Player</Filter>
     </ClCompile>
-    <ClCompile Include="Animations.cpp">
+    <ClCompile Include="Animator.cpp">
       <Filter>Source Files\Player</Filter>
     </ClCompile>
     <ClCompile Include="HitBox.cpp">
@@ -80,14 +83,8 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Animations.h">
-      <Filter>Header Files\Player</Filter>
-    </ClInclude>
-    <ClInclude Include="InputManager.h">
-      <Filter>Header Files\Player</Filter>
-    </ClInclude>
     <ClInclude Include="Player.h">
-      <Filter>Header Files\Player</Filter>
+      <Filter>Header Files\Entities\Player</Filter>
     </ClInclude>
     <ClInclude Include="MapData.h">
       <Filter>Header Files\Map</Filter>
@@ -95,32 +92,38 @@
     <ClInclude Include="TileMap.h">
       <Filter>Header Files\Map</Filter>
     </ClInclude>
-    <ClInclude Include="Entity.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="HitBox.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="MiniMap.h">
       <Filter>Header Files\Map</Filter>
     </ClInclude>
     <ClInclude Include="HealthBar.h">
-      <Filter>Header Files\Player</Filter>
-    </ClInclude>
-    <ClInclude Include="Functions.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Entities\Player</Filter>
     </ClInclude>
     <ClInclude Include="GameHeaders.h">
       <Filter>Header Files\Game</Filter>
     </ClInclude>
     <ClInclude Include="Camera.h">
-      <Filter>Header Files\Player</Filter>
-    </ClInclude>
-    <ClInclude Include="PlayerData.h">
-      <Filter>Header Files\Player</Filter>
+      <Filter>Header Files\Entities\Player</Filter>
     </ClInclude>
     <ClInclude Include="Menu.h">
       <Filter>Header Files\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Entity.h">
+      <Filter>Header Files\Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="HitBox.h">
+      <Filter>Header Files\Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="Functions.h">
+      <Filter>Header Files\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="Animator.h">
+      <Filter>Header Files\Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="InputManager.h">
+      <Filter>Header Files\Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="EntityData.h">
+      <Filter>Header Files\Entities</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

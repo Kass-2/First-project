@@ -31,12 +31,17 @@
 #include "Camera.h"
 #include "HitBox.h"
 #include "Menu.h"
+#include "TileMap.h"
+
+
 
 // Structure pour stocker les éléments à rendre avec leur position Y
 struct RenderItem {
 	float y;
 	std::function<void()> drawCall;
 };
+
+
 
 int main()
 {
@@ -45,6 +50,7 @@ int main()
 	//===============================
     sf::RenderWindow window(sf::VideoMode({ windowWidth, windowHeight }), "Hikari");
 	window.setFramerateLimit(60);
+	window.setKeyRepeatEnabled(false);
 	//window.setVerticalSyncEnabled(true);
 
 	//===============================
@@ -113,21 +119,15 @@ int main()
 	//===============================
 	// Création du sprite et de la texture du joueur
 	//===============================
-	sf::Texture texture;
-	sf::Sprite sprite(texture);
-
-	Player playerCharacter(texture, sprite, "Assets/adventurerFull.png", 96, 80);
+	Player playerCharacter("Assets/adventurerFull.png", 96, 80);
 	playerCharacter.initialState("Sid");
 	
 	//===============================
 	// Création du sprite et de la texture du personnage de test
 	//===============================
-	sf::Texture testTexture;
-	sf::Sprite testSprite(testTexture);
-
-	Player testCharacter(testTexture, testSprite, "Assets/adventurerFull.png", 96, 80);
+	Player testCharacter("Assets/adventurerFull.png", 96, 80);
 	testCharacter.initialState("Test");
-	testCharacter.setPlayerPosition(testSprite, 200.f, 200.f);
+	testCharacter.setPlayerPosition(200.f, 200.f);
 
 	// Verrouiller le mouvement du personnage de test pour éviter qu'il ne se déplace pendant les tests
 	testCharacter.LockPlayer();
@@ -223,8 +223,8 @@ int main()
 						activeMenu->toggleFullScreen(isFullscreen, window, allMenus);
 
 						// Update Camera and Minimap dimensions
-						playerCamera.updateSize(window.getSize().x, window.getSize().y, 604.8f / window.getSize().y);
-						miniMap.updateWindowSize(window.getSize().x, window.getSize().y);
+						playerCamera.updateSize((float)window.getSize().x, (float)window.getSize().y, 604.8f / window.getSize().y);
+						miniMap.updateWindowSize((float)window.getSize().x, (float)window.getSize().y);
 					}
 					else if (action == "CREDITS") {
 						std::cout << "Nothing yet" << std::endl;
@@ -246,8 +246,8 @@ int main()
 						activeMenu->toggleFullScreen(isFullscreen, window, allMenus);
 
 						// Update Camera and Minimap dimensions
-						playerCamera.updateSize(window.getSize().x, window.getSize().y, 604.8f / window.getSize().y);
-						miniMap.updateWindowSize(window.getSize().x, window.getSize().y);
+						playerCamera.updateSize((float)window.getSize().x, (float)window.getSize().y, 604.8f / window.getSize().y);
+						miniMap.updateWindowSize((float)window.getSize().x, (float)window.getSize().y);
 					}
 					else if (action == "MAIN MENU") {
 						currentGameState = GameState::Menu;
@@ -296,21 +296,21 @@ int main()
 		sf::FloatRect testHitbox;
 
 		if (currentGameState == GameState::Playing) {
-			playerCharacter.update(dt, window, sprite);
-			testCharacter.update(dt, window, testSprite);
+			playerCharacter.update(dt, window);
+			testCharacter.update(dt, window);
 
 			playerHealthBar.update(playerCharacter.getHealth(), playerCharacter.getMaxHealth(), dt);
 
 			// Récupérer les hitboxes des deux personnages pour la détection de collision
-			playerHitbox = playerCharacter.getHitbox(sprite);
-			testHitbox = testCharacter.getHitbox(testSprite);
+			playerHitbox = playerCharacter.getHitbox();
+			testHitbox = testCharacter.getHitbox();
 
 			// Détection de collision
-			resolveCollision(sprite, playerHitbox, testHitbox);
+			resolveCollision(playerCharacter.getSprite(), playerHitbox, testHitbox);
 
 			// Mettre à jour la position de la caméra pour suivre le joueur
-			playerCamera.follow(playerCharacter, sprite);
-			playerCamera.clamped(playerCharacter, sprite);
+			playerCamera.follow(playerCharacter);
+			playerCamera.clamped(playerCharacter);
 		}
 
 		// Pour le rendu, on efface la fenêtre avec une couleur noire
@@ -338,10 +338,10 @@ int main()
 
 				std::vector<RenderItem> renderQueue;
 
-				renderQueue.push_back({ sprite.getPosition().y, [&]()
-					{ playerCharacter.draw(window, sprite); } });
-				renderQueue.push_back({ testSprite.getPosition().y, [&]()
-					{ testCharacter.draw(window, testSprite); } });
+				renderQueue.push_back({ playerCharacter.getSprite().getPosition().y, [&]()
+					{ playerCharacter.draw(window); } });
+				renderQueue.push_back({ testCharacter.getSprite().getPosition().y, [&]()
+					{ testCharacter.draw(window); } });
 
 				// TODO : Ajouter d'autres éléments à la file d'attente de rendu si nécessaire
 
@@ -367,7 +367,7 @@ int main()
 
 				playerHealthBar.draw(window, { 20.f, 20.f });
 
-				miniMap.draw(window, tileMap, playerCharacter, sprite, testCharacter, testSprite);
+				miniMap.draw(window, tileMap, playerCharacter, testCharacter);
 
 				applyCameraUI(window);
 

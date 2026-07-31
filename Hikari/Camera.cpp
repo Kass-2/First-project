@@ -8,8 +8,11 @@
 //===============================
 // Inclusion des bibliothèques nécessaires
 //===============================
-#include "Camera.h"
 #include <algorithm>
+
+#include <SFML/Graphics/RenderWindow.hpp>
+
+#include "Camera.h"
 
 Camera::Camera(int width, int height, 
 	int map_width, int map_height, 
@@ -30,14 +33,14 @@ void Camera::updateSize(float width, float height, float zoom) {
     camera.zoom(zoom);
 }
 
-void Camera::clamped(const Player& player, const sf::Sprite& sprite) {
-    sf::Vector2f playerPos = player.getPosition(sprite);
+void Camera::clamped(const Player& player) {
+    sf::Vector2f playerPos = player.getPosition();
 
     float halfWidth = camera.getSize().x / 2.f;
     float halfHeight = camera.getSize().y / 2.f;
 
-    float mapWidthPixels = MAP_WIDTH * TILE_SIZE;
-    float mapHeightPixels = MAP_HEIGHT * TILE_SIZE;
+    float mapWidthPixels = float(MAP_WIDTH * TILE_SIZE);
+    float mapHeightPixels = float(MAP_HEIGHT * TILE_SIZE);
 
     float clampedX = playerPos.x;
     float clampedY = playerPos.y;
@@ -67,8 +70,8 @@ void Camera::clamped(const Player& player, const sf::Sprite& sprite) {
     camera.setCenter({ clampedX, clampedY });
 }
 
-void Camera::follow(const Player& player, const sf::Sprite& sprite) {
-	camera.setCenter(player.getPosition(sprite));
+void Camera::follow(const Player& player) {
+	camera.setCenter(player.getPosition());
 }
 
 void Camera::apply(sf::RenderWindow& window) {

@@ -39,7 +39,7 @@ Menu::Menu(const std::string& fontPath, const std::string& title, int titleSize,
 		std::cerr << "Erreur lors du chargement de la police: " << fontPath << std::endl;
 	}
 
-	menuRatios.titleSizeRatio = titleSize;
+	menuRatios.titleSizeRatio = (float)titleSize;
 	menuRatios.positionRatioX = positionRatioX;
 	menuRatios.positionRatioY = positionRatioY;
 	menuRatios.bWidthRatio = bWidthRatio;
@@ -51,7 +51,7 @@ Menu::Menu(const std::string& fontPath, const std::string& title, int titleSize,
 	menuHeader.setFont(font);
 	menuHeader.setString(title);
 
-	int initialHSize = calculateSize(titleSize, 960, 576, windowWidth, windowHeight);
+	int initialHSize = calculateSize((float)titleSize, 960, 576, windowWidth, windowHeight);
 	menuHeader.setCharacterSize(initialHSize);
 	menuHeader.setFillColor(menuHeaderColor);
 
@@ -86,7 +86,7 @@ void Menu::addButton(const std::string& label, const std::string& action, Menu* 
 	// Garder l'acinne donnée de ratio
 	menuRatios.txtSizeRatio = txtSizeRatio;
 
-	int index = menu.size();
+	float index = (float)menu.size();
 
 	// Configuration de base du bouton
 	button.background.setSize({ buttonWidth, buttonHeight });
@@ -96,10 +96,10 @@ void Menu::addButton(const std::string& label, const std::string& action, Menu* 
 	button.text.setString(label);
 
 	// Taille de la police du texte à l'intérieur du bouton
-	int txtSize = calculateValue(windowWidth, windowHeight, txtSizeRatio);
+	int txtSize = (int)calculateValue(windowWidth, windowHeight, txtSizeRatio);
 
 	button.text.setCharacterSize(txtSize);
-	button.text.setPosition({ startX + calculateValue(buttonWidth, 7.f), startY + index * (buttonHeight + spacing) + calculateValue(buttonHeight, 35.f) });
+	button.text.setPosition({ startX + calculateValue((int)buttonWidth, 7.f), startY + index * (buttonHeight + spacing) + calculateValue((int)buttonHeight, 35.f) });
 
 	menu.push_back(button);
 
@@ -132,7 +132,7 @@ std::string Menu::handleEvent(const sf::Event& event, const sf::RenderWindow& wi
 		for (size_t i = 0; i < menu.size(); ++i) {
 			if (menu[i].background.getGlobalBounds().contains(mousePos)) {
 				if (selectedIndex != i) {
-					selectedIndex = i;
+					selectedIndex = (int)i;
 					updateVisuals();
 				}
 			}
@@ -225,7 +225,7 @@ void Menu::updateLayout(unsigned int& newWWidth, unsigned int& newWHeight) {
 	spacing = calculateValue(windowHeight, menuRatios.bSpacingRatio);
 
 	// Nouvelle taille du texte de l'en-tête
-	int newHeaderTxtSize = calculateSize(menuRatios.titleSizeRatio, 960, 576, windowWidth, windowHeight);
+	int newHeaderTxtSize = calculateSize(menuRatios.titleSizeRatio, 960, 576, (int)windowWidth, (int)windowHeight);
 	menuHeader.setCharacterSize(newHeaderTxtSize);
 
 	// Position de l'étiquette du menu
@@ -239,10 +239,10 @@ void Menu::updateLayout(unsigned int& newWWidth, unsigned int& newWHeight) {
 		menu[i].background.setPosition({ startX, startY + i * (buttonHeight + spacing) });
 
 		// Taille de la police du texte à l'intérieur du bouton
-		int txtSize = calculateValue(windowWidth, windowHeight, menuRatios.txtSizeRatio);
+		int txtSize = (int)calculateValue(windowWidth, windowHeight, menuRatios.txtSizeRatio);
 		
 		menu[i].text.setCharacterSize(txtSize);
-		menu[i].text.setPosition({ startX + calculateValue(buttonWidth, 7.f), startY + i * (buttonHeight + spacing) + calculateValue(buttonHeight, 35.f) });
+		menu[i].text.setPosition({ startX + calculateValue((int)buttonWidth, 7.f), startY + i * (buttonHeight + spacing) + calculateValue((int)buttonHeight, 35.f) });
 	}
 }
 
@@ -250,7 +250,7 @@ void Menu::updateLayout(unsigned int& newWWidth, unsigned int& newWHeight) {
 
 void Menu::drawMenuBackground(sf::Color& backgroundColor, sf::RenderWindow& window) {
 	// Dessiner un background pour le menu
-	sf::RectangleShape menuBackground(sf::Vector2f(windowWidth, windowHeight));
+	sf::RectangleShape menuBackground(sf::Vector2f((float)windowWidth, (float)windowHeight));
 	menuBackground.setFillColor(backgroundColor);
 
 	window.draw(menuBackground);

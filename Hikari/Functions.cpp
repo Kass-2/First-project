@@ -10,9 +10,9 @@
 //===============================
 #include "Functions.h"
 
-int calculateSize(int baseSize, int baseWindowWidth, int baseWindowHeight, int currentWindowWidth, int currentWindowHeight) {
-	float PX = static_cast<float>(baseSize) / baseWindowWidth;	// Pourcentage de la position X de l'en-tête par rapport à la largeur de la fenêtre (960)
-	float PY = static_cast<float>(baseSize) / baseWindowHeight;	// Pourcentage de la position Y de l'en-tête par rapport à la hauteur de la fenêtre (576)
+int calculateSize(float baseSize, int baseWindowWidth, int baseWindowHeight, int currentWindowWidth, int currentWindowHeight) {
+	float PX = baseSize / baseWindowWidth;	// Pourcentage de la position X de l'en-tête par rapport à la largeur de la fenêtre (960)
+	float PY = baseSize / baseWindowHeight;	// Pourcentage de la position Y de l'en-tête par rapport à la hauteur de la fenêtre (576)
 
 	float sizeX = currentWindowWidth * PX;	// Taille de la position X de l'en-tête par rapport à la largeur de la fenêtre (960)
 	float sizeY = currentWindowHeight * PY;	// Taille de la position Y de l'en-tête par rapport à la hauteur de la fenêtre (576)

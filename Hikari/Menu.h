@@ -46,7 +46,7 @@ struct MenuButton {
 
 // Structure pour stocker les ratios pour le menu
 struct MenuRatios {
-	float titleSizeRatio;
+	float titleSizeRatio = 0;
 	float positionRatioX = 2.f;
 	float positionRatioY = 18.f;
 	float bWidthRatio = 30.f;
@@ -54,7 +54,7 @@ struct MenuRatios {
 	float bSpacingRatio = 2.f;
 	float headerWidthRatio = 4.f;
 	float headerHeightRatio = 5.f;
-	float txtSizeRatio;
+	float txtSizeRatio = 0;
 };
 
 //===============================

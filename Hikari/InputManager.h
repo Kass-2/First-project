@@ -10,8 +10,12 @@
 //===============================
 // Inclusion des bibliothèques
 //===============================
-#include "GameHeaders.h"
-#include "PlayerData.h"
+#include <SFML/Graphics/Sprite.hpp>
+#include <SFML/System/Vector2.hpp>
+
+#include "Entity.h"
+
+
 
 class InputManager
 {
@@ -24,15 +28,15 @@ public:
 		PlayerStates& playerState, 
 		PlayerInfo& player, 
 		HeldDirection& heldState, 
-		DirectionInfo& DInfo,
-		AttackInfo& AInfo);
+		DirectionInfo& directionInfo,
+		AttackInfo& AInfo) const;
 
 	//===============================
 	// Fonction pour gérer les événements clavier et mettre à jour les booléens correspondants
 	//===============================
 	void handleEvent(const sf::Event& event, 
 		HeldDirection& heldState, 
-		DirectionInfo& DInfo, 
+		DirectionInfo& directionInfo, 
 		AttackInfo& AInfo, 
 		PlayerStates& playerState, 
 		bool& inventory);
