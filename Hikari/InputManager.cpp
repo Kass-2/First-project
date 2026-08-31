@@ -126,6 +126,7 @@ sf::Vector2f InputManager::handleMovement(
 
 	// Si le joueur est en train d'attaquer, on réduit sa vitesse de déplacement
 	if (AInfo.attacking) player.speed *= 0.25f;
+	else if (playerState.walk) player.speed = 1.2f * 60;
 	else player.speed = playerState.run ? (3.f * 60) : (1.9f * 60);
 
 	// Normaliser le vecteur de mouvement pour éviter que le personnage ne se déplace plus vite en diagonale
@@ -219,11 +220,15 @@ void InputManager::handleEvent(const sf::Event& event,
 			break;
 			// Si le joueur est en train de courir, on le fait marcher, sinon on le fait courir
 		case sf::Keyboard::Key::LControl:
-			playerState.walk = !playerState.walk;
+			// Pour éviter que le joueur ne puisse courir et marcher en même temps
+			if (!playerState.run) 
+				playerState.walk = !playerState.walk;
 			break;
 			// Si le joueur est en train de courir, on le fait marcher, sinon on le fait courir
 		case sf::Keyboard::Key::LShift:
-			playerState.run = !playerState.run;
+			// Pour éviter que le joueur ne puisse courir et marcher en même temps
+			if (!playerState.walk)
+				playerState.run = !playerState.run;
 			break;
 			// Touches d'attaque (entrée)
 		case sf::Keyboard::Key::Enter:

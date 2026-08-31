@@ -1,5 +1,5 @@
 ### What I need to do in the game (Ideas and tasks)
-- Refactor my code
+- Refactor my code to make a start of the HikariEngine (Temporary Name)
 
 - (DONE, for now. Still need to upscale the healthBar) Continue the menu implimentation. (Had the other button and functionality of the menu and pause menu)
 
@@ -19,12 +19,14 @@
 The name for my game "Hikari" means "light" in Japanese wish is a cultture that I am interested in and want to incorporate into my game.
 
 ## Ideas to help make my game 
-1. Mina the hollower is a good inspiration for my game. Look into her design and abilities for ideas on how to create a unique character for my game.
+- Mina the hollower is a good inspiration for my game. Look into her design and abilities for ideas on how to create a unique character for my game.
 
-2. Hyper light Drifter is another inspiration I could look into. The art style and gameplay mechanics of that game could 
+- Hyper light Drifter is another inspiration I could look into. The art style and gameplay mechanics of that game could 
 provide some interesting ideas for my own game.
 
-3. I should use this font in my game to have a criptic text kinda feel to it. The font is called "Noto Sans Old Turkic" and can be found on font.google.com.
+- I should use this font in my game to have a criptic text kinda feel to it. The font is called "Noto Sans Old Turkic" and can be found on font.google.com.
+
+- Kamudo is a good name for something. (From one piece chapter 1190)
 
 ## Notes from the autofill AI (Could be interesting to explore)
 She is a character from the game Hollow Knight, and she is known for her ability to hollow out her own body to create powerful attacks.
