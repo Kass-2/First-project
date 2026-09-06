@@ -365,7 +365,7 @@ void Player::handleInput(float dt) {
 	sprite.move(velocity * dt);
 
 	// Gère l'attaque du joueur
-	if (AInfo.attackPressed && !AInfo.attacking && AInfo.attackCooldown.getElapsedTime().asSeconds() >= AInfo.attackCooldownTime) {
+	if (AInfo.attackPressed && !AInfo.attacking && AInfo.attackCooldown.getElapsedTime().asSeconds() >= ATTACK_COOLDOWN_TIME) {
 		playerState.state = PlayerState::ATTACKING;
 		AInfo.attacking = true;
 		AInfo.attackCooldown.restart();

@@ -40,4 +40,8 @@ const float JOGGING_SPEED = 2.0f * 60.f;
 const float RUNNING_SPEED = 3.5f * 60.f;
 
 const float DASHING_DISTANCE = 10.f;
+
+// Temps de cooldown entre les attaques du joueur
+const float ATTACK_COOLDOWN_TIME = 0.4f;
+// Distance d'ataque du joueur
 const float ATTACK_DISTANCE = 50.f;
