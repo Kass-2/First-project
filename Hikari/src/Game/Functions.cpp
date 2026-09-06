@@ -8,7 +8,9 @@
 //===============================
 // Inclusion des bibliothèques nécessaires
 //===============================
-#include "Functions.h"
+#include "..\..\include\Game\Functions.h"
+
+
 
 int calculateSize(float baseSize, int baseWindowWidth, int baseWindowHeight, int currentWindowWidth, int currentWindowHeight) {
 	float PX = baseSize / baseWindowWidth;	// Pourcentage de la position X de l'en-tête par rapport à la largeur de la fenêtre (960)
@@ -20,6 +22,8 @@ int calculateSize(float baseSize, int baseWindowWidth, int baseWindowHeight, int
 	return int(((sizeX + sizeY) / 2));
 }
 
+
+
 float calculateSizeX(float baseSize, int baseWindowWidth, int currentWindowWidth) {
 	float PX = baseSize / baseWindowWidth;	// Pourcentage de la position X de l'en-tête par rapport à la largeur de la fenêtre (960)
 
@@ -27,6 +31,8 @@ float calculateSizeX(float baseSize, int baseWindowWidth, int currentWindowWidth
 
 	return sizeX;
 }
+
+
 
 float calculateSizeY(float baseSize, int baseWindowHeight, int currentWindowHeight) {
 	float PY = baseSize / baseWindowHeight;	// Pourcentage de la position Y de l'en-tête par rapport à la hauteur de la fenêtre (576)
@@ -36,6 +42,8 @@ float calculateSizeY(float baseSize, int baseWindowHeight, int currentWindowHeig
 	return sizeY;
 }
 
+
+
 float calculatePositionX(float positionX, int oldWindowWidth, int currentWindowWidth) {
 	float PX = positionX / oldWindowWidth;	// Pourcentage de la position X de l'en-tête par rapport à la largeur de la fenêtre (960)
 
@@ -43,6 +51,8 @@ float calculatePositionX(float positionX, int oldWindowWidth, int currentWindowW
 
 	return posX;
 }
+
+
 
 float calculatePositionY(float positionY, int oldWindowHeight, int currentWindowHeight) {
 	float PY = positionY / oldWindowHeight;	// Pourcentage de la position Y de l'en-tête par rapport à la hauteur de la fenêtre (576)
@@ -52,9 +62,13 @@ float calculatePositionY(float positionY, int oldWindowHeight, int currentWindow
 	return posY;
 }
 
+
+
 float calculateValue(int windowWidth, float ratio) {
 	return windowWidth * (ratio / 100);
 }
+
+
 
 float calculateValue(int windowWidth, int windowHeight, float ratio) {
 	float a = windowWidth * (ratio / 100);

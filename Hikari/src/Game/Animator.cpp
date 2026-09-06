@@ -13,7 +13,7 @@
 #include <SFML/Graphics/Sprite.hpp>
 #include <SFML/Graphics/Rect.hpp>
 
-#include "Animator.h"
+#include "C:\MyProjects\Hikari\Hikari\include\Game\Animator.h"
 
 
 

@@ -10,8 +10,14 @@
 //===============================
 // Inclusion des bibliothèques
 //===============================
-#include <SFML/Graphics.hpp>
 #include <string>
+
+#include <SFML/Graphics/RenderWindow.hpp>
+#include <SFML/Graphics/Sprite.hpp>
+#include <SFML/Graphics/Texture.hpp>
+#include <SFML/System/Vector2.hpp>
+
+
 
 class HealthBar {
 public:

@@ -22,9 +22,9 @@
 #include <SFML/Graphics/RectangleShape.hpp>
 #include <SFML/Graphics/Sprite.hpp>
 
-#include "Menu.h"
-#include "Functions.h"
-#include "MapData.h"
+#include "C:\MyProjects\Hikari\Hikari\include\Game\Menu.h"
+#include "C:\MyProjects\Hikari\Hikari\include\Game\Functions.h"
+#include "C:\MyProjects\Hikari\Hikari\include\Game\MapData.h"
 
 
 

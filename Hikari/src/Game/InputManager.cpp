@@ -8,15 +8,15 @@
 //===============================
 // Inclusion des bibliothèques nécessaires
 //===============================
+#include <cmath>
+
 #include <SFML/Graphics/Sprite.hpp>
 #include <SFML/Window/Keyboard.hpp>
 #include <SFML/System/Vector2.hpp>
 
-#include "InputManager.h"
-#include "EntityData.h"
-#include "Entity.h"
-
-#include <cmath>
+#include "C:\MyProjects\Hikari\Hikari\include\Game\InputManager.h"
+#include "C:\MyProjects\Hikari\Hikari\include\Game\EntityData.h"
+#include "C:\MyProjects\Hikari\Hikari\include\Game\Entity.h"
 
 
 

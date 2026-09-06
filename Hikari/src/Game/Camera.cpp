@@ -12,7 +12,7 @@
 
 #include <SFML/Graphics/RenderWindow.hpp>
 
-#include "Camera.h"
+#include "C:\MyProjects\Hikari\Hikari\include\Game\Camera.h"
 
 
 

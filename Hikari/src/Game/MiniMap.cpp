@@ -8,7 +8,15 @@
 //===============================
 // Inclusion des bibliothèques nécessaires
 //===============================
-#include "MiniMap.h"
+#include <SFML/Graphics/RenderWindow.hpp>
+#include <SFML/Window/Event.hpp>
+#include <SFML/Window/Keyboard.hpp>
+
+#include "C:\MyProjects\Hikari\Hikari\include\Game\MiniMap.h"
+#include "../../include/Game/Player.h"
+#include "../../include/Game/TileMap.h"
+
+
 
 MiniMap::MiniMap(float mapWidth, float mapHeight, float windowWidth, float windowHeight, int tileSize) {
 	// Convertir les dimensions de la carte en pixels
@@ -60,6 +68,8 @@ MiniMap::MiniMap(float mapWidth, float mapHeight, float windowWidth, float windo
     testCharDot.setOrigin({ 12.f, 12.f });
 }
 
+
+
 void MiniMap::updateWindowSize(float windowWidth, float windowHeight) {
     float viewWidth = windowWidth * 0.1875f;
     float viewHeight = windowHeight * 0.1875f;
@@ -76,6 +86,8 @@ void MiniMap::updateWindowSize(float windowWidth, float windowHeight) {
     border.setPosition({ viewX, viewY });
 }
 
+
+
 void MiniMap::handleEvent(const sf::Event & event) {
     if (const auto* keyPressed = event.getIf<sf::Event::KeyPressed>()) {
         if (keyPressed->code == sf::Keyboard::Key::M) {
@@ -83,6 +95,8 @@ void MiniMap::handleEvent(const sf::Event & event) {
         }
     }
 }
+
+
 
 void MiniMap::draw(sf::RenderWindow & window, const TileMap & tileMap, 
     const Player & player, const Player & testChar) 

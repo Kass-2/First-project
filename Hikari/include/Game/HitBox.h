@@ -10,7 +10,11 @@
 //===============================
 // Inclusion des bibliothèques
 //===============================
-#include "GameHeaders.h"
+#include <SFML/Graphics/Rect.hpp>
+#include <SFML/Graphics/RenderWindow.hpp>
+#include <SFML/Graphics/Sprite.hpp>
+
+
 
 //===============================
 // Déclaration de la fonction pour résoudre les collisions entre une entité et un obstacle

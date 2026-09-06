@@ -10,10 +10,12 @@
 //===============================
 // Inclusion des bibliothèques
 //===============================
-# include "GameHeaders.h"
 #include <SFML/Graphics/View.hpp>
-#include <SFML/Graphics/Sprite.hpp>
+#include <SFML/Graphics/RenderWindow.hpp>
+
 #include "Player.h"
+
+
 
 //===============================
 // Appliquer la vue de la caméra à l'interface utilisateur (UI)

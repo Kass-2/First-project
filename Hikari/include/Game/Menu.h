@@ -20,12 +20,16 @@
 #include <SFML/Window/Event.hpp>
 #include <SFML/Graphics/RenderWindow.hpp>
 
+
+
 // Énumération pour les états du jeu
 enum class GameState {
 	Menu,
 	PauseMenu,
 	Playing
 };
+
+
 
 // Déclaration anticipée de la classe Menu
 class Menu;
@@ -44,6 +48,8 @@ struct MenuButton {
 	MenuButton(const sf::Font& font, Menu* sub = nullptr) : text(font), subMenu(sub) {}
 };
 
+
+
 // Structure pour stocker les ratios pour le menu
 struct MenuRatios {
 	float titleSizeRatio = 0;
@@ -56,6 +62,8 @@ struct MenuRatios {
 	float headerHeightRatio = 5.f;
 	float txtSizeRatio = 0;
 };
+
+
 
 //===============================
 // Police principale du jeu

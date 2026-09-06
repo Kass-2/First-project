@@ -5,7 +5,15 @@
 // Version : 1.0
 //====================================
 
-#include "GameHeaders.h"
+//===============================
+// Inclusion des bibliothèques nécessaires
+//===============================
+#include <fstream>
+#include <sstream>
+#include <string>
+#include <vector>
+
+
 
 //===============================
 // Constantes pour la taille des tuiles et les dimensions de la carte
@@ -48,6 +56,8 @@ bool loadCSV(const std::string& filename, std::vector<int>& map, int& width, int
 
     return true;
 }
+
+
 
 void loadMap(int* map, const std::vector<int>& mapData, const int MAX_TILES)
 {

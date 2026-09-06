@@ -10,7 +10,8 @@
 //===============================
 // Inclusion des bibliothèques
 //===============================
-#include <SFML/Graphics.hpp>
+
+
 
 //==============================
 // Fonction pour calculer une taille en fonction de la taille de la fenêtre

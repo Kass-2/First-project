@@ -8,9 +8,12 @@
 //===============================
 // Inclusion des bibliothèques
 //===============================
-#include "HealthBar.h"
 #include <algorithm>
 #include <iostream>
+
+#include "C:\MyProjects\Hikari\Hikari\include\Game\HealthBar.h"
+
+
 
 HealthBar::HealthBar(const std::string& containerPath, 
     int containerWidth, int containerHeight, int containerFrames,
@@ -37,6 +40,8 @@ HealthBar::HealthBar(const std::string& containerPath,
     containerSprite.setTextureRect(sf::IntRect({ 0, 0 }, { cW, cH }));
     fireSprite.setTextureRect(sf::IntRect({ 0, 0 }, { fW, fH }));
 }
+
+
 
 void HealthBar::update(float currentHealth, float maxHealth, float dt) {
 	// Permet de gérer l'animation des spritesheets pour le conteneur et le feu
@@ -71,6 +76,8 @@ void HealthBar::update(float currentHealth, float maxHealth, float dt) {
     );
     fireSprite.setTextureRect(fireRect);
 }
+
+
 
 void HealthBar::draw(sf::RenderWindow& window,
     const sf::Vector2f&

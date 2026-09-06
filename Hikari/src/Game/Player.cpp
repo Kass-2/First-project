@@ -14,10 +14,10 @@
 #include <SFML/Graphics/Texture.hpp>
 #include <SFML/Graphics/Sprite.hpp>
 
-#include "Player.h"
-#include "MapData.h"
-#include "EntityData.h"
-#include "Entity.h"
+#include "C:\MyProjects\Hikari\Hikari\include\Game\Player.h"
+#include "C:\MyProjects\Hikari\Hikari\include\Game\MapData.h"
+#include "C:\MyProjects\Hikari\Hikari\include\Game\EntityData.h"
+#include "C:\MyProjects\Hikari\Hikari\include\Game\Entity.h"
 
 
 

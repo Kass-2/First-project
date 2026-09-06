@@ -13,6 +13,8 @@
 #include <string>
 #include <vector>
 
+
+
 //===============================
 // Constantes pour la taille des tuiles et les dimensions de la carte
 //===============================
@@ -36,11 +38,16 @@ bool loadCSV(const std::string& filename, std::vector<int>& map, int& width, int
 //================================
 void loadMap(int* map, const std::vector<int>& mapData, const int MAX_TILES);
 
-
+//===============================
+// Fonction pour obtenir la largeur de la fenêtre
+//================================
 inline unsigned int getWindowWidth() {
 	return windowWidth;
 }
 
+//===============================
+// Fonction pour obtenir la hauteur de la fenêtre
+//================================
 inline unsigned int getWindowHeight() {
 	return windowHeight;
 }

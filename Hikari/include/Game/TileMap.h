@@ -7,7 +7,20 @@
 
 #pragma once
 
-#include "GameHeaders.h"
+//===============================
+// Inclusion des bibliothèques nécessaires
+//===============================
+#include <string>
+
+#include <SFML/Graphics/Drawable.hpp>
+#include <SFML/Graphics/RenderStates.hpp>
+#include <SFML/Graphics/RenderTarget.hpp>
+#include <SFML/Graphics/Texture.hpp>
+#include <SFML/Graphics/Transformable.hpp>
+#include <SFML/Graphics/VertexArray.hpp>
+#include <SFML/System/Vector2.hpp>
+
+
 
 class TileMap : public sf::Drawable, public sf::Transformable
 {

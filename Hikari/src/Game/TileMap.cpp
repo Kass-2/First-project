@@ -5,13 +5,20 @@
 // Version : 1.0
 //====================================
 
-#include "tileMap.h"
+//===============================
+// Inclusion des bibliothèques nécessaires
+//===============================
+#include "..\..\include\Game\tileMap.h"
+
+
 
 TileMap::TileMap(unsigned int mapWidth, unsigned int mapHeight)
     : mapWidth(mapWidth), mapHeight(mapHeight)
 {
 
 }
+
+
 
 bool TileMap::load(const std::string& tilesetPath, sf::Vector2u tileSize, 
     const int* tiles)
@@ -64,6 +71,8 @@ bool TileMap::load(const std::string& tilesetPath, sf::Vector2u tileSize,
     }
     return true;
 }
+
+
 
 void TileMap::draw(sf::RenderTarget& target, 
     sf::RenderStates states) const 

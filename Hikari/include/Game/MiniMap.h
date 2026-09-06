@@ -10,9 +10,16 @@
 //===============================
 // Inclusion des bibliothèques
 //===============================
-#include <SFML/Graphics.hpp>
+#include <SFML/Graphics/CircleShape.hpp>
+#include <SFML/Graphics/RectangleShape.hpp>
+#include <SFML/Graphics/RenderWindow.hpp>
+#include <SFML/Graphics/View.hpp>
+#include <SFML/Window/Event.hpp>
+
 #include "Player.h"
 #include "TileMap.h"
+
+
 
 class MiniMap {
 public:

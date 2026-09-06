@@ -8,30 +8,37 @@
 //===============================
 // Inclusion des bibliothèques nécessaires
 //===============================
+
 // Librairies standard
 #include <iostream>
 #include <algorithm>
 #include <functional>
 #include <vector>
 #include <string>
+#include <optional>
 
 // Librairies SFML
 #include <SFML/Graphics/Color.hpp>
-#include <SFML/Graphics/Texture.hpp>
-#include <SFML/Graphics/Sprite.hpp>
-#include <SFML/Graphics.hpp>
-#include <optional>
+#include <SFML/Graphics/Rect.hpp>
+#include <SFML/System/Vector2.hpp>
+#include <SFML/Graphics/Transformable.hpp>
+#include <SFML/Graphics/RenderTarget.hpp>
+#include <SFML/Graphics/RenderWindow.hpp>
+#include <SFML/Window/Keyboard.hpp>
+#include <SFML/Window/VideoMode.hpp>
+#include <SFML/Window/Window.hpp>
+#include <SFML/Window/WindowBase.hpp>
 #include <SFML/System/Clock.hpp>
 
 // Librairies du jeu
-#include "Player.h"
-#include "MapData.h"
-#include "MiniMap.h"
-#include "HealthBar.h"
-#include "Camera.h"
-#include "HitBox.h"
-#include "Menu.h"
-#include "TileMap.h"
+#include "C:\MyProjects\Hikari\Hikari\include\Game\Player.h"
+#include "C:\MyProjects\Hikari\Hikari\include\Game\MapData.h"
+#include "C:\MyProjects\Hikari\Hikari\include\Game\MiniMap.h"
+#include "C:\MyProjects\Hikari\Hikari\include\Game\HealthBar.h"
+#include "C:\MyProjects\Hikari\Hikari\include\Game\Camera.h"
+#include "C:\MyProjects\Hikari\Hikari\include\Game\HitBox.h"
+#include "C:\MyProjects\Hikari\Hikari\include\Game\Menu.h"
+#include "C:\MyProjects\Hikari\Hikari\include\Game\TileMap.h"
 
 
 

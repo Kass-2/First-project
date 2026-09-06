@@ -8,7 +8,13 @@
 //===============================
 // Inclusion des bibliothèques nécessaires
 //===============================
-#include "HitBox.h"
+#include <SFML/Graphics/RenderWindow.hpp>
+#include <SFML/Graphics/RectangleShape.hpp>
+#include <SFML/Graphics/Rect.hpp>
+
+#include "C:\MyProjects\Hikari\Hikari\include\Game\HitBox.h"
+
+
 
 void resolveCollision(sf::Sprite& entitySprite, const sf::FloatRect&
     entityHitbox, const sf::FloatRect& obstacleHitbox) {
@@ -35,6 +41,8 @@ void resolveCollision(sf::Sprite& entitySprite, const sf::FloatRect&
         }
     }
 }
+
+
 
 void drawHitboxOutline(sf::RenderWindow& window, const sf::FloatRect&
     hitbox) {
