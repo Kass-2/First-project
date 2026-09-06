@@ -134,36 +134,39 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Animator.cpp" />
-    <ClCompile Include="Camera.cpp" />
-    <ClCompile Include="Engine\Engine.cpp" />
-    <ClCompile Include="Functions.cpp" />
-    <ClCompile Include="HealthBar.cpp" />
-    <ClCompile Include="HitBox.cpp" />
-    <ClCompile Include="InputManager.cpp" />
-    <ClCompile Include="MapData.cpp" />
-    <ClCompile Include="main.cpp" />
-    <ClCompile Include="Menu.cpp" />
-    <ClCompile Include="MiniMap.cpp" />
-    <ClCompile Include="Player.cpp" />
-    <ClCompile Include="TileMap.cpp" />
+    <ClCompile Include="src\Engine\AssetManager.cpp" />
+    <ClCompile Include="src\Engine\Engine.cpp" />
+    <ClCompile Include="src\Game\Animator.cpp" />
+    <ClCompile Include="src\Game\Camera.cpp" />
+    <ClCompile Include="src\Game\Functions.cpp" />
+    <ClCompile Include="src\Game\HealthBar.cpp" />
+    <ClCompile Include="src\Game\HitBox.cpp" />
+    <ClCompile Include="src\Game\InputManager.cpp" />
+    <ClCompile Include="src\Game\main.cpp" />
+    <ClCompile Include="src\Game\MapData.cpp" />
+    <ClCompile Include="src\Game\Menu.cpp" />
+    <ClCompile Include="src\Game\MiniMap.cpp" />
+    <ClCompile Include="src\Game\Player.cpp" />
+    <ClCompile Include="src\Game\TileMap.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Animator.h" />
-    <ClInclude Include="Engine\Engine.h" />
-    <ClInclude Include="EntityData.h" />
-    <ClInclude Include="Functions.h" />
-    <ClInclude Include="Camera.h" />
-    <ClInclude Include="Entity.h" />
-    <ClInclude Include="GameHeaders.h" />
-    <ClInclude Include="HealthBar.h" />
-    <ClInclude Include="HitBox.h" />
-    <ClInclude Include="InputManager.h" />
-    <ClInclude Include="MapData.h" />
-    <ClInclude Include="Menu.h" />
-    <ClInclude Include="MiniMap.h" />
-    <ClInclude Include="Player.h" />
-    <ClInclude Include="TileMap.h" />
+    <ClInclude Include="include\Engine\AssetManager.h" />
+    <ClInclude Include="include\Engine\Engine.h" />
+    <ClInclude Include="include\Engine\GameState.h" />
+    <ClInclude Include="include\Game\Animator.h" />
+    <ClInclude Include="include\Game\Camera.h" />
+    <ClInclude Include="include\Game\Entity.h" />
+    <ClInclude Include="include\Game\EntityData.h" />
+    <ClInclude Include="include\Game\Functions.h" />
+    <ClInclude Include="include\Game\GameHeaders.h" />
+    <ClInclude Include="include\Game\HealthBar.h" />
+    <ClInclude Include="include\Game\HitBox.h" />
+    <ClInclude Include="include\Game\InputManager.h" />
+    <ClInclude Include="include\Game\MapData.h" />
+    <ClInclude Include="include\Game\Menu.h" />
+    <ClInclude Include="include\Game\MiniMap.h" />
+    <ClInclude Include="include\Game\Player.h" />
+    <ClInclude Include="include\Game\TileMap.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="Assets\adventurerFull.png" />

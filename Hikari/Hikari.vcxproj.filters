@@ -54,91 +54,100 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="MapData.cpp">
-      <Filter>Source Files\Game\Map</Filter>
-    </ClCompile>
-    <ClCompile Include="TileMap.cpp">
-      <Filter>Source Files\Game\Map</Filter>
-    </ClCompile>
-    <ClCompile Include="Player.cpp">
-      <Filter>Source Files\Game\Entities\Player</Filter>
-    </ClCompile>
-    <ClCompile Include="MiniMap.cpp">
-      <Filter>Source Files\Game\Map</Filter>
-    </ClCompile>
-    <ClCompile Include="HealthBar.cpp">
-      <Filter>Source Files\Game\Entities\Player</Filter>
-    </ClCompile>
-    <ClCompile Include="Camera.cpp">
-      <Filter>Source Files\Game\Entities\Player</Filter>
-    </ClCompile>
-    <ClCompile Include="Menu.cpp">
-      <Filter>Source Files\Game</Filter>
-    </ClCompile>
-    <ClCompile Include="InputManager.cpp">
-      <Filter>Source Files\Game\Entities</Filter>
-    </ClCompile>
-    <ClCompile Include="Animator.cpp">
-      <Filter>Source Files\Game\Entities</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\Engine.cpp">
+    <ClCompile Include="src\Engine\AssetManager.cpp">
       <Filter>Source Files\Engine</Filter>
     </ClCompile>
-    <ClCompile Include="Functions.cpp">
+    <ClCompile Include="src\Engine\Engine.cpp">
+      <Filter>Source Files\Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Game\Camera.cpp">
+      <Filter>Source Files\Game\Entities\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Game\HealthBar.cpp">
+      <Filter>Source Files\Game\Entities\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Game\Player.cpp">
+      <Filter>Source Files\Game\Entities\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Game\Functions.cpp">
       <Filter>Source Files\Game</Filter>
     </ClCompile>
-    <ClCompile Include="HitBox.cpp">
+    <ClCompile Include="src\Game\Menu.cpp">
+      <Filter>Source Files\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Game\Animator.cpp">
       <Filter>Source Files\Game\Entities</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Game\HitBox.cpp">
+      <Filter>Source Files\Game\Entities</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Game\InputManager.cpp">
+      <Filter>Source Files\Game\Entities</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Game\MapData.cpp">
+      <Filter>Source Files\Game\Map</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Game\MiniMap.cpp">
+      <Filter>Source Files\Game\Map</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Game\TileMap.cpp">
+      <Filter>Source Files\Game\Map</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Game\main.cpp">
+      <Filter>Source Files\Game</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Player.h">
-      <Filter>Header Files\Game\Entities\Player</Filter>
-    </ClInclude>
-    <ClInclude Include="MapData.h">
-      <Filter>Header Files\Game\Map</Filter>
-    </ClInclude>
-    <ClInclude Include="TileMap.h">
-      <Filter>Header Files\Game\Map</Filter>
-    </ClInclude>
-    <ClInclude Include="MiniMap.h">
-      <Filter>Header Files\Game\Map</Filter>
-    </ClInclude>
-    <ClInclude Include="HealthBar.h">
-      <Filter>Header Files\Game\Entities\Player</Filter>
-    </ClInclude>
-    <ClInclude Include="GameHeaders.h">
-      <Filter>Header Files\Game</Filter>
-    </ClInclude>
-    <ClInclude Include="Camera.h">
-      <Filter>Header Files\Game\Entities\Player</Filter>
-    </ClInclude>
-    <ClInclude Include="Menu.h">
-      <Filter>Header Files\Game</Filter>
-    </ClInclude>
-    <ClInclude Include="Entity.h">
-      <Filter>Header Files\Game\Entities</Filter>
-    </ClInclude>
-    <ClInclude Include="HitBox.h">
-      <Filter>Header Files\Game\Entities</Filter>
-    </ClInclude>
-    <ClInclude Include="Functions.h">
-      <Filter>Header Files\Game</Filter>
-    </ClInclude>
-    <ClInclude Include="Animator.h">
-      <Filter>Header Files\Game\Entities</Filter>
-    </ClInclude>
-    <ClInclude Include="InputManager.h">
-      <Filter>Header Files\Game\Entities</Filter>
-    </ClInclude>
-    <ClInclude Include="EntityData.h">
-      <Filter>Header Files\Game\Entities</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Engine.h">
+    <ClInclude Include="include\Engine\Engine.h">
       <Filter>Header Files\Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Engine\AssetManager.h">
+      <Filter>Header Files\Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Engine\GameState.h">
+      <Filter>Header Files\Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Game\Camera.h">
+      <Filter>Header Files\Game\Entities\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Game\HealthBar.h">
+      <Filter>Header Files\Game\Entities\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Game\Player.h">
+      <Filter>Header Files\Game\Entities\Player</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Game\Functions.h">
+      <Filter>Header Files\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Game\GameHeaders.h">
+      <Filter>Header Files\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Game\Menu.h">
+      <Filter>Header Files\Game</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Game\Entity.h">
+      <Filter>Header Files\Game\Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Game\EntityData.h">
+      <Filter>Header Files\Game\Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Game\HitBox.h">
+      <Filter>Header Files\Game\Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Game\InputManager.h">
+      <Filter>Header Files\Game\Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Game\MapData.h">
+      <Filter>Header Files\Game\Map</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Game\MiniMap.h">
+      <Filter>Header Files\Game\Map</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Game\TileMap.h">
+      <Filter>Header Files\Game\Map</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Game\Animator.h">
+      <Filter>Header Files\Game\Entities</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
