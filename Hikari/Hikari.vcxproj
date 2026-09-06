@@ -136,6 +136,7 @@
   <ItemGroup>
     <ClCompile Include="Animator.cpp" />
     <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="Engine\Engine.cpp" />
     <ClCompile Include="Functions.cpp" />
     <ClCompile Include="HealthBar.cpp" />
     <ClCompile Include="HitBox.cpp" />
@@ -149,6 +150,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Animator.h" />
+    <ClInclude Include="Engine\Engine.h" />
     <ClInclude Include="EntityData.h" />
     <ClInclude Include="Functions.h" />
     <ClInclude Include="Camera.h" />

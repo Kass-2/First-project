@@ -14,9 +14,14 @@
 #include "Entity.h"
 #include "Animator.h"
 
+#include <vector>
 
 
-std::unordered_map<PlayerState, AnimationConfig> playerAnimationMap = {
+
+//==============================
+// Player Data
+//==============================
+inline std::unordered_map<PlayerState, AnimationConfig> playerAnimationMap = {
 	{ PlayerState::IDLE,		{ 24, 8, 0.2f,  true } },
 	{ PlayerState::WALKING,		{ 32, 8, 0.1f,  true } },
 	{ PlayerState::JOGGING,		{ 28, 8, 0.08f, true } },
@@ -28,3 +33,11 @@ std::unordered_map<PlayerState, AnimationConfig> playerAnimationMap = {
 	{ PlayerState::HEALING,		{ 16, 8, 0.1f,  false } },
 	{ PlayerState::DEAD,		{ 12, 7, 0.1f,  false } }
 };
+
+// Player Speed (in pixels per second)
+const float WALKING_SPEED = 1.0f * 60.f;
+const float JOGGING_SPEED = 2.0f * 60.f;
+const float RUNNING_SPEED = 3.5f * 60.f;
+
+const float DASHING_DISTANCE = 10.f;
+const float ATTACK_DISTANCE = 50.f;

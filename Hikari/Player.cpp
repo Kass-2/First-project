@@ -115,9 +115,9 @@ void Player::initialState(std::string characterName) {
 	player.maxHealth = 100;
 	player.attackPower = 10;
 	player.defense = 5;
-	player.speed = (1.f * 60);
+	player.speed = JOGGING_SPEED;
 	player.stamina = 100;
-	player.dashDistance = 3;
+	player.dashDistance = DASHING_DISTANCE;
 }
 
 
@@ -171,113 +171,35 @@ void Player::useHeal(float amount) {
 
 
 bool Player::dashMechanic(float dt) {
-	// 2. Manage Exhausted (Stumble) state
+	// 1. Soft recovery window without locking movement velocity
 	if (playerState.state == PlayerState::EXHAUSTED) {
-		if (exhaustionTimer.getElapsedTime().asSeconds() >= 0.4f) {
-			playerState.state = PlayerState::IDLE; // Recover after 0.4 seconds
+		if (exhaustionTimer.getElapsedTime().asSeconds() >= 0.08f) { // Quick 80ms recovery
+				playerState.state = PlayerState::IDLE;
 		}
-		velocity = { 0.f, 0.f }; // Lock velocity to zero
-		return false;
+		// DO NOT set velocity = {0, 0}! Allow normal movement input during recovery.
 	}
 
-	// 3. Pre-update the chain dash window check (needed for the input step below)
+	// 2. Active Dash Duration & Momentum Transfer
 	if (playerState.state == PlayerState::DASHING) {
 		float elapsed = dashTimer.getElapsedTime().asSeconds();
-		float dashDuration = 0.21f;
-		chainDash = (elapsed >= 0.15f && elapsed <= dashDuration);
-	}
-	else {
-		chainDash = false;
-	}
-
-	// 4. Process new dash input (Space key pressed)
-	if (playerState.dash) {
-		playerState.dash = false;
-
-		// Calculate dash direction based on currently held keys (allows zig-zag chain dashes)
-		sf::Vector2f newDashDir = { 0.f, 0.f };
-
-		// Determine horizontal direction using last pressed horizontal key
-		if (heldState.leftHeld && heldState.rightHeld) {
-			newDashDir.x = (directionInfo.lastHorizontal == Direction::LEFT) ? -1.f : 1.f;
-		}
-		else if (heldState.leftHeld) {
-			newDashDir.x = -1.f;
-		}
-		else if (heldState.rightHeld) {
-			newDashDir.x = 1.f;
-		}
-
-		// Determine vertical direction using last pressed vertical key
-		if (heldState.upHeld && heldState.downHeld) {
-			newDashDir.y = (directionInfo.lastVertical == Direction::UP) ? -1.f : 1.f;
-		}
-		else if (heldState.upHeld) {
-			newDashDir.y = -1.f;
-		}
-		else if (heldState.downHeld) {
-			newDashDir.y = 1.f;
-		}
-
-		if (newDashDir != sf::Vector2f(0.f, 0.f)) {
-			// Normalize direction vector
-			float len = std::sqrt(newDashDir.x * newDashDir.x + newDashDir.y * newDashDir.y);
-			newDashDir = newDashDir / len;
-		}
-		else {
-			// Default to current facing direction if no movement keys are held
-			switch (directionInfo.direction) {
-			case Direction::LEFT:  newDashDir = { -1.f, 0.f }; break;
-			case Direction::RIGHT: newDashDir = { 1.f, 0.f }; break;
-			case Direction::UP:    newDashDir = { 0.f, -1.f }; break;
-			case Direction::DOWN:  newDashDir = { 0.f, 1.f }; break;
-			}
-		}
-
-		if (playerState.state == PlayerState::DASHING) {
-			if (chainDash) {
-				// Perfect timing: Chain Dash!
-				dashChainCount++;
-				dashDirection = newDashDir;
-				dashTimer.restart();
-				animator.resetAnimation();
-			}
-			else {
-				// Bad timing (Pressed too early/late): Stumble / Exhausted
-				playerState.state = PlayerState::EXHAUSTED;
-				exhaustionTimer.restart();
-				dashChainCount = 0;
-				velocity = { 0.f, 0.f }; // Stop movement instantly
-				return false;
-			}
-		}
-		else {
-			// First dash initiation
-			playerState.state = PlayerState::DASHING;
-			dashDirection = newDashDir;
-			dashTimer.restart();
-			dashChainCount = 0;
-		}
-		return false;
-	}
-
-	// 5. Active Dash Movement
-	if (playerState.state == PlayerState::DASHING) {
-		float elapsed = dashTimer.getElapsedTime().asSeconds();
-		float dashDuration = 0.21f;
+		float dashDuration = 0.16f; // Punchy, fast dash (160ms)
 
 		if (elapsed >= dashDuration) {
 			playerState.state = PlayerState::IDLE;
 			dashChainCount = 0;
+
+			// Carry 50% of dash velocity into normal movement for a smooth momentum glide!
+				float dashSpeed = (player.dashDistance * TILE_SIZE / dashDuration);
+			velocity = dashDirection * (dashSpeed * 0.5f);
 		}
 		else {
-			// Speed increases by +15% per successful chain (capped at +60%)
 			float chainMultiplier = 1.0f + (dashChainCount * 0.15f);
 			if (chainMultiplier > 1.60f) chainMultiplier = 1.60f;
 
-			float dashSpeed = (player.dashDistance * TILE_SIZE / dashDuration) * chainMultiplier;
+			float dashSpeed = (player.dashDistance * TILE_SIZE / dashDuration)
+				* chainMultiplier;
 			sprite.move(dashDirection * dashSpeed * dt);
-			return false; // Return early ONLY during active movement step
+			return false;
 		}
 	}
 	return true;
@@ -361,46 +283,83 @@ void Player::handleInput(float dt) {
 	//	return;
 	//}
 
-	// Mouvement pour l'attaque du joueur
-	if (AInfo.attacking && animator.getCurrentFrame() == 2) {
-		float dashSpeed = 50.f;
+	//// Mouvement pour l'attaque du joueur
+	//if (AInfo.attacking && animator.getCurrentFrame() == 2) {
+	//	float dashSpeed = 50.f;
+	//	switch (directionInfo.direction) {
+	//	case Direction::LEFT:
+	//		AInfo.attackVelocity = { -dashSpeed, 0.f };
+	//		break;
+	//	case Direction::RIGHT:
+	//		AInfo.attackVelocity = { dashSpeed, 0.f };
+	//		break;
+	//	case Direction::UP:
+	//		AInfo.attackVelocity = { 0.f, -dashSpeed };
+	//		break;
+	//	case Direction::DOWN:
+	//		AInfo.attackVelocity = { 0.f, dashSpeed };
+	//		break;
+	//	}
+	//}
+
+	//
+
+	//// Si le joueur est en train d'attaquer, déplacer légèrement le personnage dans la direction de l'attaque
+	//sprite.move(AInfo.attackVelocity * dt);
+
+	//// Appliquer une friction pour réduire progressivement la vitesse d'attaque
+	//AInfo.attackVelocity *= 0.9f;
+
+	// 1. Trigger forward attack lunge on frame 1
+	if (AInfo.attacking && animator.getCurrentFrame() == 1) {
+		float lungeSpeed = ATTACK_DISTANCE; // Energetic attack lunge
 		switch (directionInfo.direction) {
-		case Direction::LEFT:
-			AInfo.attackVelocity = { -dashSpeed, 0.f };
-			break;
-		case Direction::RIGHT:
-			AInfo.attackVelocity = { dashSpeed, 0.f };
-			break;
-		case Direction::UP:
-			AInfo.attackVelocity = { 0.f, -dashSpeed };
-			break;
-		case Direction::DOWN:
-			AInfo.attackVelocity = { 0.f, dashSpeed };
-			break;
+		case Direction::LEFT:  AInfo.attackVelocity = { -lungeSpeed, 0.f };
+							break;
+		case Direction::RIGHT: AInfo.attackVelocity = { lungeSpeed, 0.f };
+							 break;
+		case Direction::UP:    AInfo.attackVelocity = { 0.f, -lungeSpeed };
+						  break;
+		case Direction::DOWN:  AInfo.attackVelocity = { 0.f,  lungeSpeed };
+							break;
 		}
 	}
 
-	// Vecteur de mouvement du joueur en fonction des entrées clavier
-	sf::Vector2f movement = { 0.f, 0.f };
-
-	// Si le joueur est en train d'attaquer, déplacer légèrement le personnage dans la direction de l'attaque
+	// 2. Apply attack movement and decay using delta time
 	sprite.move(AInfo.attackVelocity * dt);
+	AInfo.attackVelocity -= AInfo.attackVelocity * 18.f * dt; // Delta-time decay
 
-	// Appliquer une friction pour réduire progressivement la vitesse d'attaque
-	AInfo.attackVelocity *= 0.9f;
+	if (std::abs(AInfo.attackVelocity.x) < 5.f) AInfo.attackVelocity.x = 0.f;
+	if (std::abs(AInfo.attackVelocity.y) < 5.f) AInfo.attackVelocity.y = 0.f;
 
 	if (AInfo.attacking) return;
+	
+	// Vecteur de mouvement du joueur en fonction des entrées clavier
+	sf::Vector2f movement = { 0.f, 0.f };
 
 	movement = inputManager.handleMovement(sprite, playerState, player, heldState, directionInfo, AInfo);
 
 	// Défini la vitesse du joueur selon sa direction
 	sf::Vector2f targetVelocity = movement * player.speed;
 
-	// Défini le taux d'acceleration/friction du joueur (25.f when starting to move, 15.f when sliding to a stop)
-	float speedRate = (movement != sf::Vector2f(0.f, 0.f)) ? 25.f : 15.f;
+	float speedRate = 0.f;
+	if (movement != sf::Vector2f(0.f, 0.f)) {
+		float dot = velocity.x * movement.x + velocity.y * movement.y;
+		// High acceleration (70.f) for near-instant frame-1 responsiveness
+		speedRate = (dot < 0.f) ? 100.f : 70.f;
+	}
+	else {
+		// Sharp stop (60.f) prevents slippery coasting
+		speedRate = 60.f;
+	}
 
-	// Smoothly interpolate current velocity towards target velocity
-	velocity = velocity + (targetVelocity - velocity) * speedRate * dt;
+	velocity += (targetVelocity - velocity) * speedRate * dt;
+
+	// Cut micro-drifts immediately to exact zero when stopping
+	if (movement == sf::Vector2f(0.f, 0.f) && (velocity.x * velocity.x + velocity.y
+		* velocity.y) < 4.0f) {
+		velocity = { 0.f, 0.f };
+	}
 
 	// Appliquer les calcules du mouvement sur le sprite
 	sprite.move(velocity * dt);

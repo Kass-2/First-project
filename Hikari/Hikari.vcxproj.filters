@@ -22,26 +22,35 @@
     <Filter Include="Resource Files\Assets\Maps">
       <UniqueIdentifier>{21166b97-fcd8-4ff7-9a33-24dd0ad1c5d2}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Source Files\Map">
-      <UniqueIdentifier>{92afe215-b373-42ad-acad-07eab966d06c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Source Files\Player">
-      <UniqueIdentifier>{054dd2db-a8af-45e7-99b5-90d9f25d9e1e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Header Files\Map">
-      <UniqueIdentifier>{9e890db1-597d-4e4f-a47f-8c8977215cca}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Header Files\Game">
       <UniqueIdentifier>{c5513eee-4a60-47a4-a178-2072bc29b56f}</UniqueIdentifier>
     </Filter>
     <Filter Include="Source Files\Game">
       <UniqueIdentifier>{dc4f8555-4dc0-494f-b613-3732bef57872}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\Entities">
+    <Filter Include="Source Files\Engine">
+      <UniqueIdentifier>{2913a4be-9646-43ed-bdce-21768ace6739}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Engine">
+      <UniqueIdentifier>{e67fe54c-74be-4fbf-8e19-754555c374c7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Game\Entities">
       <UniqueIdentifier>{c50ce563-50c4-4b77-843c-7a5faad24004}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\Entities\Player">
+    <Filter Include="Header Files\Game\Entities\Player">
       <UniqueIdentifier>{16367ae7-2030-4290-aaf9-44e26d12788f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Game\Map">
+      <UniqueIdentifier>{9e890db1-597d-4e4f-a47f-8c8977215cca}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Game\Entities">
+      <UniqueIdentifier>{fd19a2bb-b98e-4861-9ddf-d52b9d8c028b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Game\Entities\Player">
+      <UniqueIdentifier>{054dd2db-a8af-45e7-99b5-90d9f25d9e1e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Game\Map">
+      <UniqueIdentifier>{92afe215-b373-42ad-acad-07eab966d06c}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -49,81 +58,87 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="MapData.cpp">
-      <Filter>Source Files\Map</Filter>
+      <Filter>Source Files\Game\Map</Filter>
     </ClCompile>
     <ClCompile Include="TileMap.cpp">
-      <Filter>Source Files\Map</Filter>
-    </ClCompile>
-    <ClCompile Include="InputManager.cpp">
-      <Filter>Source Files\Player</Filter>
+      <Filter>Source Files\Game\Map</Filter>
     </ClCompile>
     <ClCompile Include="Player.cpp">
-      <Filter>Source Files\Player</Filter>
-    </ClCompile>
-    <ClCompile Include="Animator.cpp">
-      <Filter>Source Files\Player</Filter>
-    </ClCompile>
-    <ClCompile Include="HitBox.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Game\Entities\Player</Filter>
     </ClCompile>
     <ClCompile Include="MiniMap.cpp">
-      <Filter>Source Files\Map</Filter>
+      <Filter>Source Files\Game\Map</Filter>
     </ClCompile>
     <ClCompile Include="HealthBar.cpp">
-      <Filter>Source Files\Player</Filter>
+      <Filter>Source Files\Game\Entities\Player</Filter>
     </ClCompile>
     <ClCompile Include="Camera.cpp">
-      <Filter>Source Files\Player</Filter>
+      <Filter>Source Files\Game\Entities\Player</Filter>
     </ClCompile>
     <ClCompile Include="Menu.cpp">
       <Filter>Source Files\Game</Filter>
     </ClCompile>
+    <ClCompile Include="InputManager.cpp">
+      <Filter>Source Files\Game\Entities</Filter>
+    </ClCompile>
+    <ClCompile Include="Animator.cpp">
+      <Filter>Source Files\Game\Entities</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Engine.cpp">
+      <Filter>Source Files\Engine</Filter>
+    </ClCompile>
     <ClCompile Include="Functions.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Game</Filter>
+    </ClCompile>
+    <ClCompile Include="HitBox.cpp">
+      <Filter>Source Files\Game\Entities</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Player.h">
-      <Filter>Header Files\Entities\Player</Filter>
+      <Filter>Header Files\Game\Entities\Player</Filter>
     </ClInclude>
     <ClInclude Include="MapData.h">
-      <Filter>Header Files\Map</Filter>
+      <Filter>Header Files\Game\Map</Filter>
     </ClInclude>
     <ClInclude Include="TileMap.h">
-      <Filter>Header Files\Map</Filter>
+      <Filter>Header Files\Game\Map</Filter>
     </ClInclude>
     <ClInclude Include="MiniMap.h">
-      <Filter>Header Files\Map</Filter>
+      <Filter>Header Files\Game\Map</Filter>
     </ClInclude>
     <ClInclude Include="HealthBar.h">
-      <Filter>Header Files\Entities\Player</Filter>
+      <Filter>Header Files\Game\Entities\Player</Filter>
     </ClInclude>
     <ClInclude Include="GameHeaders.h">
       <Filter>Header Files\Game</Filter>
     </ClInclude>
     <ClInclude Include="Camera.h">
-      <Filter>Header Files\Entities\Player</Filter>
+      <Filter>Header Files\Game\Entities\Player</Filter>
     </ClInclude>
     <ClInclude Include="Menu.h">
       <Filter>Header Files\Game</Filter>
     </ClInclude>
     <ClInclude Include="Entity.h">
-      <Filter>Header Files\Entities</Filter>
+      <Filter>Header Files\Game\Entities</Filter>
     </ClInclude>
     <ClInclude Include="HitBox.h">
-      <Filter>Header Files\Entities</Filter>
+      <Filter>Header Files\Game\Entities</Filter>
     </ClInclude>
     <ClInclude Include="Functions.h">
       <Filter>Header Files\Game</Filter>
     </ClInclude>
     <ClInclude Include="Animator.h">
-      <Filter>Header Files\Entities</Filter>
+      <Filter>Header Files\Game\Entities</Filter>
     </ClInclude>
     <ClInclude Include="InputManager.h">
-      <Filter>Header Files\Entities</Filter>
+      <Filter>Header Files\Game\Entities</Filter>
     </ClInclude>
     <ClInclude Include="EntityData.h">
-      <Filter>Header Files\Entities</Filter>
+      <Filter>Header Files\Game\Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Engine.h">
+      <Filter>Header Files\Engine</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

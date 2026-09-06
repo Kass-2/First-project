@@ -14,6 +14,8 @@
 
 #include "Camera.h"
 
+
+
 Camera::Camera(int width, int height, 
 	int map_width, int map_height, 
 	int tile_size, float zoom) {
@@ -28,10 +30,14 @@ Camera::Camera(int width, int height,
 	TILE_SIZE = tile_size;
 }
 
+
+
 void Camera::updateSize(float width, float height, float zoom) {
     camera.setSize({ width, height });
     camera.zoom(zoom);
 }
+
+
 
 void Camera::clamped(const Player& player) {
     sf::Vector2f playerPos = player.getPosition();
@@ -70,13 +76,26 @@ void Camera::clamped(const Player& player) {
     camera.setCenter({ clampedX, clampedY });
 }
 
-void Camera::follow(const Player& player) {
-	camera.setCenter(player.getPosition());
+
+
+void Camera::follow(const Player& player, float dt) {
+    sf::Vector2f target = player.getPosition();
+    sf::Vector2f current = camera.getCenter();
+    sf::Vector2f newCenter = current + (target - current) * 10.f * dt; // 10.f = camera smoothness
+    camera.setCenter(newCenter);
 }
+
+//void Camera::follow(const Player& player) {
+//	camera.setCenter(player.getPosition());
+//}
+
+
 
 void Camera::apply(sf::RenderWindow& window) {
 	window.setView(camera);
 }
+
+
 
 void applyCameraUI(sf::RenderWindow& window) {
 	// Réinitialiser la vue pour les éléments de l'interface utilisateur (UI)

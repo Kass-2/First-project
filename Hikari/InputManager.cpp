@@ -13,7 +13,10 @@
 #include <SFML/System/Vector2.hpp>
 
 #include "InputManager.h"
-#include "entity.h"
+#include "EntityData.h"
+#include "Entity.h"
+
+#include <cmath>
 
 
 
@@ -81,53 +84,66 @@ sf::Vector2f InputManager::handleMovement(
 	bool isMovingHorizontal = heldState.leftHeld || heldState.rightHeld;
 	bool isMovingVertical = heldState.upHeld || heldState.downHeld;
 
-	if (isMovingHorizontal && isMovingVertical)
-	{
-		if (lastPressedAxis == Axis::HORIZONTAL)
-		{
-			// Horizontal was pressed last, so vertical was pressed first. Face vertical.
-			if (heldState.upHeld && heldState.downHeld)
-			{
-				directionInfo.direction = (directionInfo.lastVertical == Direction::UP) ?
-					Direction::UP : Direction::DOWN;
-			}
-			else
-			{
-				directionInfo.direction = heldState.upHeld ? Direction::UP :
-					Direction::DOWN;
-			}
+	if (isMovingHorizontal && isMovingVertical) {
+		if (lastPressedAxis == Axis::HORIZONTAL) {
+			directionInfo.direction = (heldState.leftHeld && heldState.rightHeld)
+				? directionInfo.lastHorizontal
+				: (heldState.leftHeld ? Direction::LEFT : Direction::RIGHT);
 		}
-		else
-		{
-			// Vertical was pressed last, so horizontal was pressed first. Face horizontal.
-			if (heldState.leftHeld && heldState.rightHeld)
-			{
-				directionInfo.direction = (directionInfo.lastHorizontal ==
-					Direction::LEFT) ?
-					Direction::LEFT : Direction::RIGHT;
-			}
-			else
-			{
-				directionInfo.direction = heldState.leftHeld ? Direction::LEFT :
-					Direction::RIGHT;
-			}
+		else {
+			directionInfo.direction = (heldState.upHeld && heldState.downHeld)
+				? directionInfo.lastVertical
+				: (heldState.upHeld ? Direction::UP : Direction::DOWN);
 		}
 	}
+
+	//if (isMovingHorizontal && isMovingVertical)
+	//{
+	//	if (lastPressedAxis == Axis::HORIZONTAL)
+	//	{
+	//		// Horizontal was pressed last, so vertical was pressed first. Face vertical.
+	//		if (heldState.upHeld && heldState.downHeld)
+	//		{
+	//			directionInfo.direction = (directionInfo.lastVertical == Direction::UP) ?
+	//				Direction::UP : Direction::DOWN;
+	//		}
+	//		else
+	//		{
+	//			directionInfo.direction = heldState.upHeld ? Direction::UP :
+	//				Direction::DOWN;
+	//		}
+	//	}
+	//	else
+	//	{
+	//		// Vertical was pressed last, so horizontal was pressed first. Face horizontal.
+	//		if (heldState.leftHeld && heldState.rightHeld)
+	//		{
+	//			directionInfo.direction = (directionInfo.lastHorizontal ==
+	//				Direction::LEFT) ?
+	//				Direction::LEFT : Direction::RIGHT;
+	//		}
+	//		else
+	//		{
+	//			directionInfo.direction = heldState.leftHeld ? Direction::LEFT :
+	//				Direction::RIGHT;
+	//		}
+	//	}
+	//}
 
 	bool moving = (movement.x != 0.f || movement.y != 0.f);
 
 	playerState.jog = moving && (playerState.run == false) && (playerState.walk == false);
 
-	playerState.run = moving && playerState.run;
+	playerState.run = moving && heldState.shiftHeld;
 
 	playerState.walk = moving && playerState.walk;
 
 	playerState.idle = !moving && !AInfo.attacking;
 
 	// Si le joueur est en train d'attaquer, on réduit sa vitesse de déplacement
-	if (AInfo.attacking) player.speed *= 0.25f;
-	else if (playerState.walk) player.speed = 1.2f * 60;
-	else player.speed = playerState.run ? (3.f * 60) : (1.9f * 60);
+	if (AInfo.attacking) player.speed = WALKING_SPEED;
+	else if (playerState.walk) player.speed = WALKING_SPEED;
+	else player.speed = playerState.run ? RUNNING_SPEED : JOGGING_SPEED;
 
 	// Normaliser le vecteur de mouvement pour éviter que le personnage ne se déplace plus vite en diagonale
 	if (movement.x != 0.f || movement.y != 0.f)
@@ -137,11 +153,6 @@ sf::Vector2f InputManager::handleMovement(
 			movement.y * movement.y);
 
 		movement = (movement / length);
-	}
-	// Appliquer une légère réduction de la vitesse en diagonale pour éviter que le personnage ne se déplace plus vite en diagonale
-	if (movement.x != 0.f && movement.y != 0.f)
-	{
-		movement *= 0.9f;
 	}
 	
 	return movement;
@@ -187,6 +198,13 @@ void InputManager::handleEvent(const sf::Event& event,
 			directionInfo.lastVertical = Direction::DOWN;
 			lastPressedAxis = Axis::VERTICAL;
 			break;
+
+			// Si le shift est enfoncé, on fait courir le joueur
+		case sf::Keyboard::Key::LShift:
+		case sf::Keyboard::Key::RShift:
+			heldState.shiftHeld = true;
+			break;
+
 		case sf::Keyboard::Key::Space:
 			playerState.dash = true;
 			break;
@@ -224,11 +242,10 @@ void InputManager::handleEvent(const sf::Event& event,
 			if (!playerState.run) 
 				playerState.walk = !playerState.walk;
 			break;
-			// Si le joueur est en train de courir, on le fait marcher, sinon on le fait courir
+			// Si le shift est relâché, on arrête de courir
 		case sf::Keyboard::Key::LShift:
-			// Pour éviter que le joueur ne puisse courir et marcher en même temps
-			if (!playerState.walk)
-				playerState.run = !playerState.run;
+		case sf::Keyboard::Key::RShift:
+			heldState.shiftHeld = false;
 			break;
 			// Touches d'attaque (entrée)
 		case sf::Keyboard::Key::Enter:

@@ -40,7 +40,9 @@ public:
 	//===============================
 	// Mettre à jour la position de la caméra pour suivre le joueur
 	//===============================
-	void follow(const Player& player);
+	void follow(const Player& player, float dt);
+
+	/*void follow(const Player& player);*/
 
 	//===============================
 	// Appliquer la vue de la caméra à la fenêtre

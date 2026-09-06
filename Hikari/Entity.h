@@ -110,6 +110,8 @@ struct HeldDirection
 	bool upHeld = false;
 	// Booléens pour gérer le déplacement en bas
 	bool downHeld = false;
+	// Booléens pour gérer le sprint du joueur
+	bool shiftHeld = false;
 };
 
 
@@ -119,7 +121,7 @@ struct AttackInfo
 	// Horloge pour gérer le temps entre les attaques du joueur
 	sf::Clock attackCooldown;
 	// Temps de cooldown entre les attaques du joueur
-	float attackCooldownTime = 0.45f;
+	float attackCooldownTime = 0.5f;
 	// Vecteur de déplacement du joueur en fonction des entrées clavier
 	sf::Vector2f attackVelocity = { 0.f, 0.f };
 	// Direction de l'attaque du joueur

@@ -309,7 +309,7 @@ int main()
 			resolveCollision(playerCharacter.getSprite(), playerHitbox, testHitbox);
 
 			// Mettre à jour la position de la caméra pour suivre le joueur
-			playerCamera.follow(playerCharacter);
+			playerCamera.follow(playerCharacter, dt);
 			playerCamera.clamped(playerCharacter);
 		}
 
